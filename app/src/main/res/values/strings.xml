@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">TaoBaoU</string>
+    <string name="text_home">首页</string>
+    <string name="text_selected">精选</string>
+    <string name="text_red_package">特惠</string>
+    <string name="text_search">搜索</string>
+    <string name="text_search_tips">请输入您要搜索的宝贝：</string>
+    <string name="text_network_error_tips">网络出错,点击重试...</string>
+    <!--%分号的意思就是第几位参数的意思 %1 就是第一位参数
+    $d是整数的意思
+    -->
+    <string name="text_goods_off_price">省%1$d元</string>
+    <string name="text_goods_original_price">￥%1$s</string>
+    <string name="text_goods_sell_count">%1$d人已经购买</string>
+    <string name="text_getTaokouling">领取淘口令!</string>
+    <string name="text_loading">玩命加载中...</string>
+
+
+</resources>

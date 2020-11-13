@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.TestActivity">
+
+
+    <RadioGroup
+        android:id="@+id/test_navigation_bar"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/test_home"
+            android:textColor="@drawable/navigation_bar_color"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
+            android:text="首页"
+            android:drawableTop="@drawable/selector_navigation_home"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+        <RadioButton
+            android:id="@+id/test_red_packet"
+            android:textColor="@drawable/navigation_bar_color"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
+            android:text="特惠"
+            android:drawableTop="@drawable/selector_navigation_red_package"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+        <RadioButton
+            android:id="@+id/test_selected"
+            android:textColor="@drawable/navigation_bar_color"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
+            android:text="精选"
+            android:drawableTop="@drawable/selector_navigation_selected"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+        <RadioButton
+            android:id="@+id/test_search"
+            android:textColor="@drawable/navigation_bar_color"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
+            android:text="搜索"
+            android:drawableTop="@drawable/selector_navigation_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+    </RadioGroup>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_above="@+id/test_navigation_bar"
+        android:background="@color/gray"/>
+</RelativeLayout>
