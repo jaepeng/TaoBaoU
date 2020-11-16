@@ -79,8 +79,8 @@ public abstract class BaseFragment extends Fragment {
         //成功的view
         successView = loadSuccessView(inflater, container);
         mBaseContainer.addView(successView);
-        //loadingView
 
+        //loadingView
         loadingView = loadLoadingView(inflater, container);
         mBaseContainer.addView(loadingView);
 

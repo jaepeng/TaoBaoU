@@ -22,4 +22,8 @@ public class UrlUtils {
             return "https:"+url;
         }
     }
+
+    public static String getSelectedPgaeContentUrl(int categoryID) {
+        return "recommend/"+categoryID;
+    }
 }
