@@ -50,6 +50,9 @@ public class SelectedPageLeftAdapter extends RecyclerView.Adapter<SelectedPageLe
                     monLeftItemClickLisetner.onItemLeftClick(dataBean);
                     notifyDataSetChanged();
                 }
+                if (mdata.size()>0){
+                    monLeftItemClickLisetner.onItemLeftClick(mdata.get(mCurrentSelectedPosition));
+                }
 
             }
         });
@@ -80,7 +83,9 @@ public class SelectedPageLeftAdapter extends RecyclerView.Adapter<SelectedPageLe
     }
 
     public void setonLeftfItemClickListener(OnLeftfItemClickListener listener){
+
         this.monLeftItemClickLisetner=listener;
+
     }
     public interface OnLeftfItemClickListener {
         void onItemLeftClick(SelectedPageCategory.DataBean item);

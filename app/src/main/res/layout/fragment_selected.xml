@@ -28,10 +28,11 @@
             android:background="@color/white"
             android:id="@+id/left_cagegories"
             android:layout_width="120dp"
+            android:overScrollMode="never"
             android:layout_height="match_parent"/>
 
         <androidx.recyclerview.widget.RecyclerView
-
+            android:overScrollMode="never"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/right_content"/>

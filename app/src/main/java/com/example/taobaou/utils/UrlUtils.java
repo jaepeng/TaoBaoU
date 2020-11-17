@@ -26,4 +26,11 @@ public class UrlUtils {
     public static String getSelectedPgaeContentUrl(int categoryID) {
         return "recommend/"+categoryID;
     }
+    public static String getSelectedCover(String url){
+        if (url.startsWith("http")||url.startsWith("https")){
+            return url;
+        }else {
+            return "https:"+url;
+        }
+    }
 }

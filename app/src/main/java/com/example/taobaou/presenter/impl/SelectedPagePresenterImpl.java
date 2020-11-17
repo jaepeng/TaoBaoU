@@ -103,9 +103,7 @@ public class SelectedPagePresenterImpl implements ISelectedPresenter{
 
     @Override
     public void reloadContent() {
-        if (mCurrentCategoryItem!=null){
-            this.getContentByCategory(mCurrentCategoryItem);
-        }
+        this.getCategories();
 
     }
 
