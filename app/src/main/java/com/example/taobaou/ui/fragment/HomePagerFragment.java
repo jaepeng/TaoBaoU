@@ -1,10 +1,8 @@
 package com.example.taobaou.ui.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
@@ -19,9 +17,8 @@ import com.example.taobaou.R;
 import com.example.taobaou.base.BaseFragment;
 import com.example.taobaou.model.domain.Categories;
 import com.example.taobaou.model.domain.HomePagerContent;
+import com.example.taobaou.model.domain.IBaseInfo;
 import com.example.taobaou.presenter.ICategoryPagerPresenter;
-import com.example.taobaou.presenter.ITicketPresenter;
-import com.example.taobaou.ui.activity.TicketActivity;
 import com.example.taobaou.ui.adapter.HomePageContentAdapter;
 import com.example.taobaou.ui.adapter.LooperPagerAdapter;
 import com.example.taobaou.ui.custom.AutoLoopViewPager;
@@ -29,6 +26,7 @@ import com.example.taobaou.utils.Constants;
 import com.example.taobaou.utils.LogUtils;
 import com.example.taobaou.utils.PresentManager;
 import com.example.taobaou.utils.SizeUtils;
+import com.example.taobaou.utils.TickUtils;
 import com.example.taobaou.utils.ToastUtsils;
 import com.example.taobaou.view.ICategoryPagerCallback;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
@@ -352,7 +350,7 @@ public class HomePagerFragment extends BaseFragment implements ICategoryPagerCal
     }
 
     @Override
-    public void onItemClickListener(HomePagerContent.DataBean item) {
+    public void onItemClickListener(IBaseInfo item) {
         //当前列表内容
         LogUtils.d(this,"item click--->"+item.getTitle());
         handleItemClick(item);
@@ -360,26 +358,14 @@ public class HomePagerFragment extends BaseFragment implements ICategoryPagerCal
 
 
     @Override
-    public void onLooperTimeClick(HomePagerContent.DataBean item) {
+    public void onLooperTimeClick(IBaseInfo item) {
         LogUtils.d(this,"loop click--->"+item.getTitle());
         handleItemClick(item);
     }
 
-    private void handleItemClick(HomePagerContent.DataBean item) {
-        //处理数据
-        String title=item.getTitle();
-        //领券地址
-        //详情地址
-        String url=item.getCoupon_click_url();
-        if (TextUtils.isEmpty(url)){
-            url=item.getClick_url();
-        }
-        String cover=item.getPict_url();
+    private void handleItemClick(IBaseInfo item) {
 
-        ITicketPresenter ticketPresenter=PresentManager.getInstance().getTicketPresentImp();
-        ticketPresenter.getTicket(title,url,cover);
-
-        startActivity(new Intent(getContext(), TicketActivity.class));
+        TickUtils.toTicketPage(getContext(),item);
 
     }
 }

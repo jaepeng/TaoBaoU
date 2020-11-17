@@ -2,6 +2,7 @@ package com.example.taobaou.model;
 
 import com.example.taobaou.model.domain.Categories;
 import com.example.taobaou.model.domain.HomePagerContent;
+import com.example.taobaou.model.domain.OnSellContetn;
 import com.example.taobaou.model.domain.SelectedContent;
 import com.example.taobaou.model.domain.SelectedPageCategory;
 import com.example.taobaou.model.domain.TicketParams;
@@ -28,4 +29,7 @@ public interface Api {
 
     @GET()
     Call<SelectedContent> getSelectedContent(@Url String url);
+
+    @GET()
+    Call<OnSellContetn> getOnSellContent(@Url String url);
 }

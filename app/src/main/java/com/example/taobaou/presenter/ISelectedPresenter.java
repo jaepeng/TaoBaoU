@@ -1,4 +1,4 @@
-package com.example.taobaou.presenter.impl;
+package com.example.taobaou.presenter;
 
 import com.example.taobaou.base.IBasePresenter;
 import com.example.taobaou.model.domain.SelectedPageCategory;

@@ -3,6 +3,7 @@ package com.example.taobaou.presenter.impl;
 import com.example.taobaou.model.Api;
 import com.example.taobaou.model.domain.SelectedContent;
 import com.example.taobaou.model.domain.SelectedPageCategory;
+import com.example.taobaou.presenter.ISelectedPresenter;
 import com.example.taobaou.utils.LogUtils;
 import com.example.taobaou.utils.RetrofitManager;
 import com.example.taobaou.utils.UrlUtils;
@@ -15,7 +16,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class SelectedPagePresenterImpl implements ISelectedPresenter{
+public class SelectedPagePresenterImpl implements ISelectedPresenter {
     private ISelctedPageCallBack mViewCallBack=null;
     private final Api mApi;
     private SelectedPageCategory.DataBean mCurrentCategoryItem=null;

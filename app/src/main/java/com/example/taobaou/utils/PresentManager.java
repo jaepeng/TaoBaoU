@@ -2,10 +2,12 @@ package com.example.taobaou.utils;
 
 import com.example.taobaou.presenter.ICategoryPagerPresenter;
 import com.example.taobaou.presenter.IHomePresenter;
+import com.example.taobaou.presenter.IOnSellPagePresenter;
 import com.example.taobaou.presenter.ITicketPresenter;
 import com.example.taobaou.presenter.impl.CategoryPagePresenterImp;
 import com.example.taobaou.presenter.impl.HomePresentImpl;
-import com.example.taobaou.presenter.impl.ISelectedPresenter;
+import com.example.taobaou.presenter.ISelectedPresenter;
+import com.example.taobaou.presenter.impl.OnSellPagePresenterImpl;
 import com.example.taobaou.presenter.impl.SelectedPagePresenterImpl;
 import com.example.taobaou.presenter.impl.TicketPresentImp;
 
@@ -15,15 +17,19 @@ public class PresentManager {
     private final IHomePresenter mHomePresent;
     private final ITicketPresenter mTicketPresentImp;
     private final ISelectedPresenter mSelectedPagePresenter;
+    private final IOnSellPagePresenter mOnSellPagePresenter;
 
     public static PresentManager getInstance(){
         return ourInstance;
     }
+
+
     private PresentManager(){
         mCategoryPagePresenterImp = new CategoryPagePresenterImp();
         mHomePresent = new HomePresentImpl();
         mTicketPresentImp = new TicketPresentImp();
         mSelectedPagePresenter = new SelectedPagePresenterImpl();
+        mOnSellPagePresenter = new OnSellPagePresenterImpl();
 
     }
 
@@ -42,4 +48,8 @@ public class PresentManager {
     public ISelectedPresenter getSelectedPagePresenter() {
         return mSelectedPagePresenter;
     }
+    public IOnSellPagePresenter getOnSellPagePresenter(){
+        return mOnSellPagePresenter;
+    }
+
 }

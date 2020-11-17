@@ -33,4 +33,9 @@ public class UrlUtils {
             return "https:"+url;
         }
     }
+
+    public static String getOnSellPageUrl(int currentPage) {
+        return "onSell/"+currentPage;
+
+    }
 }

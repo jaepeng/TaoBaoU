@@ -1,9 +1,10 @@
 package com.example.taobaou.ui.fragment;
 
-import android.content.Intent;
 import android.graphics.Rect;
-import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,14 +14,13 @@ import com.example.taobaou.R;
 import com.example.taobaou.base.BaseFragment;
 import com.example.taobaou.model.domain.SelectedContent;
 import com.example.taobaou.model.domain.SelectedPageCategory;
-import com.example.taobaou.presenter.ITicketPresenter;
-import com.example.taobaou.presenter.impl.ISelectedPresenter;
-import com.example.taobaou.ui.activity.TicketActivity;
+import com.example.taobaou.presenter.ISelectedPresenter;
 import com.example.taobaou.ui.adapter.SelectedPageLeftAdapter;
 import com.example.taobaou.ui.adapter.SelectedPageRightAdapter;
 import com.example.taobaou.utils.LogUtils;
 import com.example.taobaou.utils.PresentManager;
 import com.example.taobaou.utils.SizeUtils;
+import com.example.taobaou.utils.TickUtils;
 import com.example.taobaou.view.ISelctedPageCallBack;
 
 import java.util.List;
@@ -36,7 +36,8 @@ public class SelectedFragment extends BaseFragment implements ISelctedPageCallBa
 
     @BindView(R.id.right_content)
     public RecyclerView right_contetnList;
-
+    @BindView(R.id.fragment_bar_titel_tv)
+    public TextView fragmetn_barTitle;
 
     private SelectedPageLeftAdapter mLeftAdapter;
     private SelectedPageRightAdapter mRightAdapter;
@@ -49,6 +50,7 @@ public class SelectedFragment extends BaseFragment implements ISelctedPageCallBa
     @Override
     protected void initView(View rootView) {
         setUpState(State.SUCCESS);
+        fragmetn_barTitle.setText("精选宝贝");
         left_categoriesList.setLayoutManager(new LinearLayoutManager(getContext()));
         mLeftAdapter = new SelectedPageLeftAdapter();
         left_categoriesList.setAdapter(mLeftAdapter);
@@ -155,20 +157,12 @@ public class SelectedFragment extends BaseFragment implements ISelctedPageCallBa
     }
     private void handleItemClick(SelectedContent.DataBean.TbkDgOptimusMaterialResponseBean.ResultListBean.MapDataBean item) {
         //处理数据
-        String title=item.getTitle();
-        //领券地址
-        //详情地址
-        String url=item.getCoupon_click_url();
-        if (TextUtils.isEmpty(url)){
-            url=item.getClick_url();
-        }
-        String cover=item.getPict_url();
+        TickUtils.toTicketPage(getContext(),item);
 
+    }
 
-        ITicketPresenter ticketPresenter=PresentManager.getInstance().getTicketPresentImp();
-        ticketPresenter.getTicket(title,url,cover);
-
-        startActivity(new Intent(getContext(), TicketActivity.class));
-
+    @Override
+    protected View loadRootView(LayoutInflater inflater, ViewGroup container) {
+        return inflater.inflate(R.layout.fragment_with_bar_layout,container,false);
     }
 }

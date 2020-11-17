@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sob="http://schemas.android.com/apk/res-auto"
+    sob:cardElevation="4dp"
+    sob:contentPadding="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    sob:cardBackgroundColor="@color/white"
+    >
+    <LinearLayout
+
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/onsell_cover"
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            />
+        <TextView
+            android:layout_marginTop="6dp"
+            android:id="@+id/onSell_Title_tv"
+            android:textSize="14sp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:text="口罩一次性口罩五层防护防晒防尘透气医疗n95口罩口罩一次性口罩五层防护防晒防尘透气医疗n95口罩口罩一次性口罩五层防护防晒防尘透气医疗n95口罩口罩一次性口罩五层防护防晒防尘透气医疗n95口罩"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textColor="#e01815"
+                android:text="原价:59元"
+                android:textSize="12sp"
+                android:id="@+id/onsell_origin_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text="券后价:28.8元"
+                android:textSize="12sp"
+                android:textColor="#e01815"
+                android:id="@+id/onsell_off_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+        </LinearLayout>
+
+        
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

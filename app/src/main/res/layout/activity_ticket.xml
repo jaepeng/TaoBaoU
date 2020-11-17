@@ -51,6 +51,8 @@
     </RelativeLayout>
 
     <EditText
+        android:ellipsize="end"
+        android:maxLines="3"
         android:editable="false"
         android:id="@+id/ticket_code"
         android:textColor="#4A4A4A"

@@ -11,7 +11,7 @@ import com.example.taobaou.R;
 import com.example.taobaou.base.BaseActivity;
 import com.example.taobaou.base.BaseFragment;
 import com.example.taobaou.ui.fragment.HomeFragment;
-import com.example.taobaou.ui.fragment.RedPackageFragment;
+import com.example.taobaou.ui.fragment.OnSellFragment;
 import com.example.taobaou.ui.fragment.SearchFragment;
 import com.example.taobaou.ui.fragment.SelectedFragment;
 import com.example.taobaou.utils.LogUtils;
@@ -26,7 +26,7 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.main_navigation_bar)
     public BottomNavigationView mNavigationView;
     private HomeFragment mHomeFragment;
-    private RedPackageFragment mRedPackageFragment;
+    private OnSellFragment mRedPackageFragment;
     private SelectedFragment mSelectedFragment;
     private SearchFragment mSearchFragment;
     private FragmentManager mFm;
@@ -47,7 +47,7 @@ public class MainActivity extends BaseActivity {
 
     private void initFragment() {
         mHomeFragment = new HomeFragment();
-        mRedPackageFragment = new RedPackageFragment();
+        mRedPackageFragment = new OnSellFragment();
         mSelectedFragment = new SelectedFragment();
         mSearchFragment = new SearchFragment();
         mFm = getSupportFragmentManager();
