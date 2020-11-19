@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.taobaou.R;
 import com.example.taobaou.base.BaseActivity;
 import com.example.taobaou.base.BaseFragment;
-import com.example.taobaou.ui.fragment.HomeFragment;
+import com.example.taobaou.ui.fragment.HomeContentFragment;
 import com.example.taobaou.ui.fragment.OnSellFragment;
 import com.example.taobaou.ui.fragment.SearchFragment;
 import com.example.taobaou.ui.fragment.SelectedFragment;
@@ -20,12 +20,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import butterknife.BindView;
 import butterknife.Unbinder;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements IMainActivity{
 
 
     @BindView(R.id.main_navigation_bar)
     public BottomNavigationView mNavigationView;
-    private HomeFragment mHomeFragment;
+    private HomeContentFragment mHomeFragment;
     private OnSellFragment mRedPackageFragment;
     private SelectedFragment mSelectedFragment;
     private SearchFragment mSearchFragment;
@@ -40,13 +40,15 @@ public class MainActivity extends BaseActivity {
 
     }
 
+
+
     @Override
     protected void initPresenter() {
 
     }
 
     private void initFragment() {
-        mHomeFragment = new HomeFragment();
+        mHomeFragment = new HomeContentFragment();
         mRedPackageFragment = new OnSellFragment();
         mSelectedFragment = new SelectedFragment();
         mSearchFragment = new SearchFragment();
@@ -124,5 +126,18 @@ public class MainActivity extends BaseActivity {
         if (mbind!=null) {
             mbind.unbind();
         }
+    }
+
+
+    /**
+     * 跳转到SearchFragment
+     * 实现主界面点击搜索框能够跳到SearchFragmnet
+     */
+    @Override
+    public void switch2Serch(){
+//        switchFragment(mSearchFragment);
+        //切花下面的图标
+        mNavigationView.setSelectedItemId(R.id.search);
+
     }
 }

@@ -14,6 +14,7 @@ import com.example.taobaou.utils.LogUtils;
 import com.example.taobaou.utils.SizeUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TextFlowLayout extends ViewGroup {
@@ -63,7 +64,10 @@ public class TextFlowLayout extends ViewGroup {
 
     }
     public void setTextList(List<String> textList){
-        this.mTextList=textList;
+        removeAllViews();
+        this.mTextList.clear();
+        this.mTextList.addAll(textList);
+        Collections.reverse(mTextList);
         //遍历内容
         for (String text : mTextList) {
             //添加子View
@@ -97,10 +101,12 @@ public class TextFlowLayout extends ViewGroup {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        if (getChildCount()==0){//因为onMeasure是多次调用的,如果没有添加进来其实就还不用测量
+            return;
+        }
         //由于这个控件的width设置成match_paretn所以测出来是 的屏幕宽度,减去Padding值更加严谨，就是控件的宽度
         mParetnSelfWidth = MeasureSpec.getSize(widthMeasureSpec)-getPaddingLeft()-getPaddingRight();
         lines.clear();//否则就叠加了
-
         List<View> line=null;//一行是什么
         //测量孩子
         int childCount=getChildCount();
@@ -191,6 +197,9 @@ public class TextFlowLayout extends ViewGroup {
     }
     public interface onFlowTextItemClick{
         void onFlowItemClick(String text);
+    }
+    public int getContentSize(){
+        return mTextList.size();
     }
 
 

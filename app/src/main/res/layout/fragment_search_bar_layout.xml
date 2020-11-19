@@ -8,23 +8,37 @@
         android:layout_width="match_parent"
         android:layout_height="40dp">
         <EditText
+            android:singleLine="true"
+            android:imeOptions="actionSearch"
+            android:id="@+id/search_input_box"
             android:background="@drawable/shape_edit_box_bg"
             android:hint="@string/text_search_tips"
             android:layout_marginLeft="15dp"
             android:textSize="12sp"
-            android:layout_toLeftOf="@+id/serach_cancel_btn"
+            android:layout_toLeftOf="@+id/search_btn"
             android:layout_centerVertical="true"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             />
+        <ImageView
+            android:id="@+id/search_input_remove_btn"
+            android:visibility="gone"
+            android:layout_marginRight="5dp"
+            android:layout_centerVertical="true"
+            android:layout_alignRight="@+id/search_input_box"
+            android:layout_toLeftOf="@id/search_btn"
+            android:src="@mipmap/shanchuyuan"
+            android:layout_width="18dp"
+            android:layout_height="18dp"/>
         <TextView
-            android:paddingRight="10dp"
+            android:paddingRight="20dp"
             android:paddingLeft="20dp"
+
             android:textColor="@color/white"
             android:layout_centerVertical="true"
-            android:id="@+id/serach_cancel_btn"
+            android:id="@+id/search_btn"
             android:text="取消"
             android:gravity="center"
             android:layout_alignParentRight="true"

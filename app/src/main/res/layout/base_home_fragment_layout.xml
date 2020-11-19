@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"/>
 
         <EditText
+            android:id="@+id/home_search_input_box"
             android:focusable="false"
             android:background="@drawable/shape_edit_box_bg"
             android:hint="@string/text_search_tips"

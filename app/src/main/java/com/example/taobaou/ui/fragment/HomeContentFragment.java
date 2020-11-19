@@ -4,14 +4,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.taobaou.R;
 import com.example.taobaou.base.BaseFragment;
 import com.example.taobaou.model.domain.Categories;
 import com.example.taobaou.presenter.IHomePresenter;
+import com.example.taobaou.ui.activity.IMainActivity;
 import com.example.taobaou.ui.adapter.HomePagerAdapter;
 import com.example.taobaou.utils.LogUtils;
 import com.example.taobaou.utils.PresentManager;
@@ -20,11 +23,13 @@ import com.google.android.material.tabs.TabLayout;
 
 import butterknife.BindView;
 
-public class HomeFragment extends BaseFragment implements IHomeCallback {
+public class HomeContentFragment extends BaseFragment implements IHomeCallback {
 
 
     @BindView(R.id.home_indicator)
     public TabLayout mTabLayout;
+    @BindView(R.id.home_search_input_box)
+    public EditText mSearchInputBox;
 
     private IHomePresenter mHomePresent;
     @BindView(R.id.home_page)
@@ -41,6 +46,16 @@ public class HomeFragment extends BaseFragment implements IHomeCallback {
         //创建presenter
         mHomePresent = PresentManager.getInstance().getHomePresent();
         mHomePresent.registerViewCallback(this);
+        mSearchInputBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 //跳转到SearchFragment
+                FragmentActivity activity = getActivity();
+                if (activity instanceof IMainActivity){
+                    ((IMainActivity)activity).switch2Serch();
+                }
+            }
+        });
         loadData();
     }
 

@@ -19,7 +19,7 @@ import com.example.taobaou.model.domain.Categories;
 import com.example.taobaou.model.domain.HomePagerContent;
 import com.example.taobaou.model.domain.IBaseInfo;
 import com.example.taobaou.presenter.ICategoryPagerPresenter;
-import com.example.taobaou.ui.adapter.HomePageContentAdapter;
+import com.example.taobaou.ui.adapter.LinerItemContentAdapter;
 import com.example.taobaou.ui.adapter.LooperPagerAdapter;
 import com.example.taobaou.ui.custom.AutoLoopViewPager;
 import com.example.taobaou.utils.Constants;
@@ -37,11 +37,11 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class HomePagerFragment extends BaseFragment implements ICategoryPagerCallback, HomePageContentAdapter.OnListeItemClickListener, LooperPagerAdapter.OnLooperItemClickListener {
+public class HomePagerFragment extends BaseFragment implements ICategoryPagerCallback, LinerItemContentAdapter.OnListItemClickListener, LooperPagerAdapter.OnLooperItemClickListener {
 
     private ICategoryPagerPresenter mCatgoryPagePresenter;
     private int mMaterialId;
-    private HomePageContentAdapter mContetnADapter;
+    private LinerItemContentAdapter mContetnADapter;
     private LooperPagerAdapter mLooperPagerAdapter;
 
     public static HomePagerFragment newInstance(Categories.DataBean category){
@@ -80,8 +80,6 @@ public class HomePagerFragment extends BaseFragment implements ICategoryPagerCal
         String title = arguments.getString(Constants.KEY_HOME_PAGE_TITLE);
         mMaterialId = arguments.getInt(Constants.KEY_HOME_PAGE_MATERIAL_ID);
         //TODO:加载数据
-//        LogUtils.d(this,"title--->"+title);
-//        LogUtils.d(this,"id--->"+ mMaterialId);
         if (mCatgoryPagePresenter!=null) {
             mCatgoryPagePresenter.getConteantByCategoryId(mMaterialId);
         }
@@ -112,12 +110,12 @@ public class HomePagerFragment extends BaseFragment implements ICategoryPagerCal
         mContentList.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                outRect.top=8;
-                outRect.bottom=8;
+                outRect.top=SizeUtils.dip2px(getContext(),1.5f);
+                outRect.bottom=SizeUtils.dip2px(getContext(),1.5f);
             }
         });
         //创建适配器
-        mContetnADapter = new HomePageContentAdapter();
+        mContetnADapter = new LinerItemContentAdapter();
 
         //设置适配器
         mContentList.setAdapter(mContetnADapter);
@@ -140,7 +138,7 @@ public class HomePagerFragment extends BaseFragment implements ICategoryPagerCal
     @Override
     protected void initListener() {
 
-        mContetnADapter.setOnListeItemClickListener(this);
+        mContetnADapter.setOnListItemClickListener(this);
 
 
         homePagerParent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -233,7 +231,7 @@ public class HomePagerFragment extends BaseFragment implements ICategoryPagerCal
             //数据列表接在
         //TODO:更新UI
 
-        mContetnADapter.setMdata(contents);
+        mContetnADapter.setData(contents);
         setUpState(State.SUCCESS);
     }
 

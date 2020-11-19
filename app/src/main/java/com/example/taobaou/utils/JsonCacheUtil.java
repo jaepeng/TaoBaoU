@@ -25,7 +25,7 @@ public class JsonCacheUtil {
     public void saveCache(String key,Object value,long duration){
         SharedPreferences.Editor edit = mSharedPreferences.edit();
         String valueStr = mGson.toJson(value);
-        if (duration!=-1L){
+        if (duration!=-1){
             //当前时间
             duration+=System.currentTimeMillis();
         }
@@ -53,7 +53,7 @@ public class JsonCacheUtil {
         CacheWithDuration cacheWithDuration = mGson.fromJson(valueWithDuration, CacheWithDuration.class);
         LogUtils.d(this,"cacheWithDuration----------->"+cacheWithDuration.getCache());
         long duration = cacheWithDuration.getDuration();
-        if (duration!=-1L&&(duration - System.currentTimeMillis())<0){
+        if (duration!=-1&&(duration - System.currentTimeMillis())<=0){
             // 判断是否过期了
                 //过期了
             return null;

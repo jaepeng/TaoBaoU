@@ -109,7 +109,22 @@ public class SearchResult {
                     this.map_data = map_data;
                 }
 
-                public static class MapDataBean {
+                public static class MapDataBean implements ILinerItemInfo{
+                    @Override
+                    public String getfinalPrice() {
+                        return zk_final_price;
+                    }
+
+                    @Override
+                    public long getCouponAmmount() {
+                        return coupon_amount;
+                    }
+
+                    @Override
+                    public String getCover() {
+                        return pict_url;
+                    }
+
                     /**
                      * category_id : 121452027
                      * category_name : 男士洁面
@@ -167,7 +182,7 @@ public class SearchResult {
                     private String category_name;
                     private String commission_rate;
                     private String commission_type;
-                    private String coupon_amount;
+                    private long coupon_amount;
                     private String coupon_end_time;
                     private String coupon_id;
                     private String coupon_info;
@@ -205,7 +220,7 @@ public class SearchResult {
                     private String tk_total_sales;
                     private String url;
                     private int user_type;
-                    private int volume;
+                    private long volume;
                     private String white_image;
                     private String x_id;
                     private String zk_final_price;
@@ -246,11 +261,11 @@ public class SearchResult {
                         this.commission_type = commission_type;
                     }
 
-                    public String getCoupon_amount() {
+                    public long getCoupon_amount() {
                         return coupon_amount;
                     }
 
-                    public void setCoupon_amount(String coupon_amount) {
+                    public void setCoupon_amount(long coupon_amount) {
                         this.coupon_amount = coupon_amount;
                     }
 
@@ -550,11 +565,11 @@ public class SearchResult {
                         this.user_type = user_type;
                     }
 
-                    public int getVolume() {
+                    public long getVolume() {
                         return volume;
                     }
 
-                    public void setVolume(int volume) {
+                    public void setVolume(long volume) {
                         this.volume = volume;
                     }
 

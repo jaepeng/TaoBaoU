@@ -38,12 +38,9 @@ public class SearchPresenterImpl implements ISearchPresenter {
     @Override
     public void getHistories() {
         Histories histories = mJsonCacheUtil.getValue(KEY_HISTORIES, Histories.class);
-        if (mSearchViewCallBack!=null&&
-                histories!=null&&
-                histories.getHistories()!=null&&
-                histories.getHistories().size()!=0){
+        if (mSearchViewCallBack!=null){
 
-            mSearchViewCallBack.onHistoriesLoad(histories.getHistories());
+            mSearchViewCallBack.onHistoriesLoad(histories);
         }
 
 
@@ -56,6 +53,10 @@ public class SearchPresenterImpl implements ISearchPresenter {
     public void delHistories() {
 
         mJsonCacheUtil.delCache(KEY_HISTORIES);
+        if (mSearchViewCallBack != null) {
+
+            mSearchViewCallBack.onHistoriesDeleted();
+        }
 
     }
 
@@ -67,39 +68,33 @@ public class SearchPresenterImpl implements ISearchPresenter {
      * 添加历史记录
      * @param history
      */
-    public void saveHistory(String history){
-        //如果已经存在了，就清除，然后添加
-        //对个数进行限制
-        Histories histories = mJsonCacheUtil.getValue(KEY_HISTORIES, Histories.class);
-        List<String> historiesList=null;
-        if (histories!=null&&histories.getHistories()!=null){
+    private void saveHistory(String history) {
+        Histories histories = mJsonCacheUtil.getValue(KEY_HISTORIES,Histories.class);
+        //如果说已经在了，就干掉，然后再添加
+        List<String> historiesList = null;
+        if(histories != null && histories.getHistories() != null) {
             historiesList = histories.getHistories();
-            if (historiesList.contains(history)) {
+            if(historiesList.contains(history)) {
                 historiesList.remove(history);
             }
-            //去重完成
-        }else{
-            //添加记录
-            if (historiesList == null) {
-
-                historiesList=new ArrayList<>();
-            }
-            if (histories == null) {
-                histories=new Histories();
-            }
-            histories.setHistories(historiesList);
-            //对个数进行限制
-            if (historiesList.size()>mHistoriesMaxSize) {
-                historiesList=historiesList.subList(0,mHistoriesMaxSize);
-            }
-
-
-            //添加数据
-            historiesList.add(history);
-            //保存记录
-            mJsonCacheUtil.saveCache(KEY_HISTORIES,histories);
-
         }
+        //去重完成
+        //处理没有数据的情况
+        if(historiesList == null) {
+            historiesList = new ArrayList<>();
+        }
+        if(histories == null) {
+            histories = new Histories();
+        }
+        histories.setHistories(historiesList);
+        //对个数进行限制
+        if(historiesList.size() > mHistoriesMaxSize) {
+            historiesList = historiesList.subList(0,mHistoriesMaxSize);
+        }
+        //添加记录
+        historiesList.add(history);
+        //保存记录
+        mJsonCacheUtil.saveCache(KEY_HISTORIES,histories);
     }
 
 
@@ -107,6 +102,7 @@ public class SearchPresenterImpl implements ISearchPresenter {
     public void doSearch(String keywords) {
 
         if (mCurrentKeyWord==null||!mCurrentKeyWord.equals(keywords)){
+            //将搜索记录保存到历史记录列表中
             this.saveHistory(keywords);
             this.mCurrentKeyWord=keywords;
         }
@@ -150,7 +146,7 @@ public class SearchPresenterImpl implements ISearchPresenter {
     }
     private boolean isResultEmpty(SearchResult result){
         try {
-            return result==null&&result.getData().getTbk_dg_material_optional_response().getResult_list().getMap_data().size()==0;
+            return result==null||result.getData().getTbk_dg_material_optional_response().getResult_list().getMap_data().size()==0;
         } catch (Exception e) {
             return false;
         }
@@ -237,6 +233,7 @@ public class SearchPresenterImpl implements ISearchPresenter {
             mSearchViewCallBack.onMoreLoadError();
         }
     }
+
 
     @Override
     public void getRecommendWords() {
