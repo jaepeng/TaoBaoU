@@ -8,8 +8,5 @@
         <item name="colorAccent">@color/colorAccent</item>
 
     </style>
-    <declare-styleable name="AutoLopperStyle">
-        <attr name="duration" format="integer"/>
-    </declare-styleable>
 
 </resources>
