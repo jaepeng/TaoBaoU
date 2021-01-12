@@ -36,7 +36,7 @@ public class SelectedPageRightAdapter extends RecyclerView.Adapter<SelectedPageR
 
     @Override
     public void onBindViewHolder(@NonNull SelectedPageRightAdapter.InnerHolder holder, int position) {
-        //todo: 绑定数据
+        //绑定数据
         SelectedContent.DataBean.TbkDgOptimusMaterialResponseBean.ResultListBean.MapDataBean itemData = mdata.get(position);
         holder.setData(itemData);
         holder.itemView.setOnClickListener(new View.OnClickListener() {

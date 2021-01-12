@@ -53,6 +53,7 @@
             android:drawableTop="@drawable/selector_navigation_search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"/>
+
     </RadioGroup>
 
     <View

@@ -1,5 +1,7 @@
 package com.example.taobaou.presenter.impl;
 
+import android.util.Log;
+
 import com.example.taobaou.model.Api;
 import com.example.taobaou.model.domain.Histories;
 import com.example.taobaou.model.domain.SearchRcommend;
@@ -23,6 +25,7 @@ public class SearchPresenterImpl implements ISearchPresenter {
 
     private static final int DEFAULT_PAGE = 1;
     private static final int DEFAULT_HISTOREIS_SIZE = 10;
+    private static final String TAG = "jae";
     private final Api mApi;
     private int currentPage=DEFAULT_PAGE;
     private ISearchPageCallBack mSearchViewCallBack=null;
@@ -194,7 +197,9 @@ public class SearchPresenterImpl implements ISearchPresenter {
             @Override
             public void onResponse(Call<SearchResult> call, Response<SearchResult> response) {
                 int code = response.code();
+                Log.d(TAG, "onResponse: doSearchMore code"+code);
                 if (code==HttpURLConnection.HTTP_OK){
+                    Log.d(TAG, "onResponse: doSearchMore===>"+response.body().getData().getTbk_dg_material_optional_response().toString());
                     handleMoreSearchResultr(response.body());
                 }else{
                     onLoadMoreErro();
@@ -217,10 +222,13 @@ public class SearchPresenterImpl implements ISearchPresenter {
      */
 
     private void handleMoreSearchResultr(SearchResult body) {
-        if (isResultEmpty(body)) {
-            mSearchViewCallBack.onMoreLoadEmpty();
-        }else{
-            mSearchViewCallBack.onMoreLoaded(body);
+        if (mSearchViewCallBack!=null){
+
+            if (isResultEmpty(body)) {
+                mSearchViewCallBack.onMoreLoadEmpty();
+            }else{
+                mSearchViewCallBack.onMoreLoaded(body);
+            }
         }
     }
 
@@ -228,7 +236,6 @@ public class SearchPresenterImpl implements ISearchPresenter {
      * 加载更多失败
      */
     private void onLoadMoreErro() {
-        currentPage--;
         if (mSearchViewCallBack != null) {
             mSearchViewCallBack.onMoreLoadError();
         }
@@ -243,7 +250,6 @@ public class SearchPresenterImpl implements ISearchPresenter {
             public void onResponse(Call<SearchRcommend> call, Response<SearchRcommend> response) {
                 int code = response.code();
                 if (code== HttpURLConnection.HTTP_OK){
-                    //todo:处理结果
                     if (mSearchViewCallBack != null) {
                         mSearchViewCallBack.onRecommandWordsLoader(response.body().getData());
                     }

@@ -1,9 +1,11 @@
 package com.example.taobaou.ui.fragment;
 
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +15,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +28,8 @@ import com.example.taobaou.model.domain.Histories;
 import com.example.taobaou.model.domain.IBaseInfo;
 import com.example.taobaou.model.domain.SearchRcommend;
 import com.example.taobaou.model.domain.SearchResult;
+import com.example.taobaou.model.message.MessageCode;
+import com.example.taobaou.model.message.MessageEvent;
 import com.example.taobaou.presenter.ISearchPresenter;
 import com.example.taobaou.ui.adapter.LinerItemContentAdapter;
 import com.example.taobaou.ui.custom.TextFlowLayout;
@@ -36,6 +42,10 @@ import com.example.taobaou.utils.ToastUtsils;
 import com.example.taobaou.view.ISearchPageCallBack;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,11 +75,54 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
     public ImageView mSearchInputRemovelIv;
     @BindView(R.id.search_btn)
     public TextView mSearchBtn;
+    public static final String TAG="SearchFragmentjae";
+    public String templeKeyWord="";
 
 
 
 
     private LinerItemContentAdapter mSearchResultAdapter;
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: 刚注册好!");
+        EventBus.getDefault().register(this);
+
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+    }
+
+
+
+    //处理EventBus传递来的数据
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    public void onEvent(MessageEvent messageEvent) {
+        if (messageEvent.getMessageCode()== MessageCode.ANALYSRESULTSEARCH){
+            String keyword = messageEvent.getMkeyword();
+            Log.d("jae", "MessageFun keyword: "+keyword);
+            if (!TextUtils.isEmpty(keyword)){
+                Log.d(TAG, "onEvent: +设置mSearchInputEdt文字"+keyword);
+                if (!TextUtils.isEmpty(keyword)){
+                    mSearchInputEdt.setText(keyword);
+                    startSearch(keyword);
+                }
+
+
+
+            }else{
+                Toast.makeText(getContext(), "没有识别出来,请手动搜索!", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
+
+    }
 
     @Override
     protected int getRootViewResid() {
@@ -82,7 +135,7 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
         msearchResultList.setLayoutManager(new LinearLayoutManager(getContext()));
         msearchRefreshContainer.setVisibility(View.GONE);
         mSearchResultAdapter = new LinerItemContentAdapter();
-
+        mSearchInputEdt.setSaveEnabled(false);
         msearchResultList.setAdapter(mSearchResultAdapter);
         mSearchResultAdapter.setOnListItemClickListener(this);
         //设置刷新控件
@@ -192,9 +245,10 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
          */
         msearchRefreshContainer.setOnRefreshListener(new RefreshListenerAdapter() {
             @Override
-            public void onLoadmoreCanceled() {
-                //去加载更多内容
-                mSearchPresenter.loaderMore();
+            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+                if (mSearchPresenter!=null){
+                    mSearchPresenter.loaderMore();
+                }
             }
         });
 
@@ -319,12 +373,6 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
 
 
         }
-
-
-
-
-
-
     }
 
     @Override
@@ -425,7 +473,14 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
 
     @Override
     public void onItemClickListener(IBaseInfo item) {
+        Log.d("jae_search", "onItemClickListener: "+item.getUrl().toString());
         //当列表内容被点击
         TickUtils.toTicketPage(getContext(),item);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

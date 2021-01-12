@@ -42,7 +42,6 @@ public class SelectedPagePresenterImpl implements ISelectedPresenter {
                 if (code== HttpURLConnection.HTTP_OK){
                     SelectedPageCategory result = response.body();
                     LogUtils.d(this,"result  ---->"+result.toString());
-                    //todo: 通知精选页面更新
                     if (mViewCallBack!=null){
 
                         mViewCallBack.onCategoryLoad(result);
@@ -83,7 +82,6 @@ public class SelectedPagePresenterImpl implements ISelectedPresenter {
                 if (code== HttpURLConnection.HTTP_OK){
                     SelectedContent result = response.body();
                     LogUtils.d(this,"SelectedContent  result  ---->"+result.toString());
-                    //todo: 通知精选页面更新
                     if (mViewCallBack!=null){
 
                         mViewCallBack.onContentLoad(result);

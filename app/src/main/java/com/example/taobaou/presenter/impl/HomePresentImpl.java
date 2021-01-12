@@ -61,7 +61,6 @@ public class HomePresentImpl implements IHomePresenter {
             @Override
             public void onFailure(Call<Categories> call, Throwable t) {
                 //加载失败的结果
-                //TODO:
                 if (mCallback!=null) {
                     mCallback.onError();
                 }

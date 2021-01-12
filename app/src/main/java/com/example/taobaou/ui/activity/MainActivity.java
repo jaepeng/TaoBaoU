@@ -1,6 +1,7 @@
 package com.example.taobaou.ui.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -10,12 +11,17 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.taobaou.R;
 import com.example.taobaou.base.BaseActivity;
 import com.example.taobaou.base.BaseFragment;
+import com.example.taobaou.model.message.MessageCode;
+import com.example.taobaou.model.message.MessageEvent;
 import com.example.taobaou.ui.fragment.HomeContentFragment;
+import com.example.taobaou.ui.fragment.MyInfoFragment;
 import com.example.taobaou.ui.fragment.OnSellFragment;
 import com.example.taobaou.ui.fragment.SearchFragment;
 import com.example.taobaou.ui.fragment.SelectedFragment;
 import com.example.taobaou.utils.LogUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.Unbinder;
@@ -31,6 +37,8 @@ public class MainActivity extends BaseActivity implements IMainActivity{
     private SearchFragment mSearchFragment;
     private FragmentManager mFm;
     private Unbinder mbind;
+    private MyInfoFragment mMyInfoFragment;
+    public static final String TAG="MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +48,12 @@ public class MainActivity extends BaseActivity implements IMainActivity{
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
 
+
+    }
 
     @Override
     protected void initPresenter() {
@@ -52,7 +65,10 @@ public class MainActivity extends BaseActivity implements IMainActivity{
         mRedPackageFragment = new OnSellFragment();
         mSelectedFragment = new SelectedFragment();
         mSearchFragment = new SearchFragment();
+        mMyInfoFragment = new MyInfoFragment();
         mFm = getSupportFragmentManager();
+        //切换到搜索碎片，然后再直接切回来，这样SearchFragment就初始化好了。
+        switchFragment(mSearchFragment);
         switchFragment(mHomeFragment);
     }
 
@@ -91,7 +107,10 @@ public class MainActivity extends BaseActivity implements IMainActivity{
                     LogUtils.e(this,"特惠");
                     switchFragment(mRedPackageFragment);
 
+                }else if (item.getItemId()==R.id.myinfo){
+                    switchFragment(mMyInfoFragment);
                 }
+
 
                 return true;//这里默认返回false,如果返回ture则表示消费该方法，那么图标才会开始变化
 
@@ -136,8 +155,18 @@ public class MainActivity extends BaseActivity implements IMainActivity{
     @Override
     public void switch2Serch(){
 //        switchFragment(mSearchFragment);
-        //切花下面的图标
+        //切换下面的图标
         mNavigationView.setSelectedItemId(R.id.search);
 
     }
+
+    @Override
+    public void switch2Serch(String keyword) {
+        Log.d(TAG, "switch2Serch: before");
+        EventBus.getDefault().postSticky(new MessageEvent(MessageCode.ANALYSRESULTSEARCH,keyword));
+        Log.d(TAG, "switch2Serch: after");
+        mNavigationView.setSelectedItemId(R.id.search);
+
+    }
+
 }

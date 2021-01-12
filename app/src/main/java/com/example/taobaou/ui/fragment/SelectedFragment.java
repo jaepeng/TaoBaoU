@@ -95,7 +95,7 @@ public class SelectedFragment extends BaseFragment implements ISelctedPageCallBa
         mLeftAdapter.setMdata(categories);
         //数据在这里回来分类内容
         LogUtils.d(this,"categories:"+categories.toString());
-        //todo: 更新UI
+        //更新UI
         //根据当前选中分类,获取分类内容
         List<SelectedPageCategory.DataBean> data = categories.getData();
         mSelectedPagePresenter.getContentByCategory(data.get(0));

@@ -79,7 +79,7 @@ public class HomePagerFragment extends BaseFragment implements ICategoryPagerCal
         Bundle arguments=getArguments();
         String title = arguments.getString(Constants.KEY_HOME_PAGE_TITLE);
         mMaterialId = arguments.getInt(Constants.KEY_HOME_PAGE_MATERIAL_ID);
-        //TODO:加载数据
+        //加载数据
         if (mCatgoryPagePresenter!=null) {
             mCatgoryPagePresenter.getConteantByCategoryId(mMaterialId);
         }
@@ -229,7 +229,7 @@ public class HomePagerFragment extends BaseFragment implements ICategoryPagerCal
     @Override
     public void onContentLoaded(List<HomePagerContent.DataBean> contents) {
             //数据列表接在
-        //TODO:更新UI
+        //更新UI
 
         mContetnADapter.setData(contents);
         setUpState(State.SUCCESS);

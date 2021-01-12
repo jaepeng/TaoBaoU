@@ -100,7 +100,7 @@ public class OnSellFragment extends BaseFragment implements IOnSellPageCallbak, 
     public void onContentLoadSuccess(OnSellContetn result) {
         setUpState(State.SUCCESS);
         //数据从这里回来
-        //todo:更新UI
+        //更新UI
         mOnSellPageAdapter.setData(result);
 
     }

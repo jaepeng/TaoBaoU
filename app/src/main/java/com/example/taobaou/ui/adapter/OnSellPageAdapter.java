@@ -37,7 +37,7 @@ public class OnSellPageAdapter extends RecyclerView.Adapter<OnSellPageAdapter.In
 
     @Override
     public void onBindViewHolder(@NonNull OnSellPageAdapter.InnerHolder holder, int position) {
-    //todo:绑定数据
+    //绑定数据
         OnSellContetn.DataBean.TbkDgOptimusMaterialResponseBean.ResultListBean.MapDataBean mapDataBean = mdata.get(position);
         holder.setData(mapDataBean);
         holder.itemView.setOnClickListener(new View.OnClickListener() {

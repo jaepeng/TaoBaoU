@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
@@ -14,18 +15,28 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.taobaou.R;
 import com.example.taobaou.base.BaseActivity;
+import com.example.taobaou.model.domain.TicketParams;
 import com.example.taobaou.model.domain.TicketResult;
 import com.example.taobaou.presenter.ITicketPresenter;
+import com.example.taobaou.utils.Constants;
 import com.example.taobaou.utils.LogUtils;
 import com.example.taobaou.utils.PresentManager;
 import com.example.taobaou.utils.ToastUtsils;
 import com.example.taobaou.utils.UrlUtils;
 import com.example.taobaou.view.ITicketPagerCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONStringer;
+import org.json.JSONTokener;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 
@@ -34,6 +45,8 @@ public class TicketActivity extends BaseActivity implements ITicketPagerCallback
     private static final String TAG = "TicketActivity";
     private ITicketPresenter mTicketPresentImp;
     private Boolean mHasTaobao=false;
+    private String mUrl="";
+    private Map<String,String> historymap=new LinkedHashMap<>();
 
 
     @BindView(R.id.ticket_cover)
@@ -53,6 +66,7 @@ public class TicketActivity extends BaseActivity implements ITicketPagerCallback
 
     @BindView(R.id.ticket_load_retry)
     public TextView loadErrorText;
+    public TicketParams mTicketParams;
 
     @Override
     protected void initPresenter() {
@@ -104,6 +118,12 @@ public class TicketActivity extends BaseActivity implements ITicketPagerCallback
                 //复制到粘贴表
                 ClipData clipdata = ClipData.newPlainText("sob_tao_bao_ticket_code", code);
                 cm.setPrimaryClip(clipdata);
+                //todo:复制后,保留复制的历史记录.
+//                mTicketParams=new TicketParams(mUrl,code);
+                historymap.put(mUrl,code);
+                setMap(TicketActivity.this,historymap);
+
+
 
                 //判断是否有淘宝
                 //如果有则打开淘宝,没有则提示复制成功
@@ -111,6 +131,7 @@ public class TicketActivity extends BaseActivity implements ITicketPagerCallback
                     Intent taobaoIntent=new Intent();
 //                    taobaoIntent.setAction("android.intent.action.Main");
 //                    taobaoIntent.addCategory("android.intent.category.LAUNCHER");
+                    //todo:无法跳转到对应的领券界面,查看是否这里除了问题
                     ComponentName componentName=new ComponentName("com.taobao.taobao","com.taobao.tao.TBMainActivity");
                     taobaoIntent.setComponent(componentName);
                     startActivity(taobaoIntent);
@@ -132,7 +153,7 @@ public class TicketActivity extends BaseActivity implements ITicketPagerCallback
     public void onTicketLoader(String cover, TicketResult ticketResult) {
 
         if (mCover!=null&& !TextUtils.isEmpty(cover)) {
-
+            mUrl=cover;
             cover=UrlUtils.getCoverPath(cover);
             Glide.with(this).load(cover).into(mCover);
 
@@ -174,5 +195,46 @@ public class TicketActivity extends BaseActivity implements ITicketPagerCallback
     @Override
     public void onEmpty() {
 
+    }
+
+
+    public static void setMap(Context context, Map<String, String> map) {
+        if (map != null) {
+            JSONStringer jsonStringer = new JSONStringer();
+            try {
+                jsonStringer.array();
+                for (String string : map.keySet()) {
+                    jsonStringer.object();
+                    jsonStringer.key(Constants.SP_KEY_HISTORY_TIECKT_URL);
+                    jsonStringer.value(string);
+                    jsonStringer.key(Constants.SP_KEY_HISTORY_TIECKT_CODE);
+                    jsonStringer.value(map.get(string));
+                    jsonStringer.endObject();
+                }
+                jsonStringer.endArray();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            SharedPreferences sp = context.getSharedPreferences(Constants.SP_KEY_HISTORY_TIECKT, Context.MODE_PRIVATE);
+            sp.edit().putString(Constants.SP_KEY_HISTORY_TIECKT_MAP, jsonStringer.toString()).apply();
+        }
+    }
+    public static Map<String,String> getMap(Context context) {
+        Map<String, String> examMap = new LinkedHashMap<>();
+        SharedPreferences sp = context.getSharedPreferences(Constants.SP_KEY_HISTORY_TIECKT, Context.MODE_PRIVATE);
+        String map = sp.getString(Constants.SP_KEY_HISTORY_TIECKT_MAP, "");
+        if (map.length() > 0) {
+            JSONTokener jsonTokener = new JSONTokener(map);
+            try {
+                JSONArray jsonArray = (JSONArray) jsonTokener.nextValue();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    examMap.put(jsonObject.getString(Constants.SP_KEY_HISTORY_TIECKT_URL), jsonObject.getString(Constants.SP_KEY_HISTORY_TIECKT_CODE));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return examMap;
     }
 }
