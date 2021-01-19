@@ -14,4 +14,5 @@ public class BaseApplication  extends Application {
     public static Context getAppContext(){
         return appContext;
     }
+
 }
