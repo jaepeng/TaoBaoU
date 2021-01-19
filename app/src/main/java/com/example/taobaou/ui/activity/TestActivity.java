@@ -1,17 +1,24 @@
 package com.example.taobaou.ui.activity;
 
 import android.os.Bundle;
-import android.widget.RadioGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.taobaou.R;
 import com.example.taobaou.base.BaseActivity;
-import com.example.taobaou.utils.LogUtils;
+import com.example.taobaou.model.domain.UserInfo;
+import com.example.taobaou.utils.SharedPreferenceManager;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class TestActivity extends BaseActivity {
-    @BindView(R.id.test_navigation_bar)
-    public RadioGroup navigationBar;
+    @BindView(R.id.btn_test_sp)
+    public Button btnSetData;
+    @BindView(R.id.btn_test_sp_get)
+    public Button btnGetData;
+    @BindView(R.id.tv_test_show_message)
+    public TextView tvShowMessage;
 
 
     @Override
@@ -26,24 +33,17 @@ public class TestActivity extends BaseActivity {
     }
 
 
-    protected void initEvent() {
-        navigationBar.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                LogUtils.d(TestActivity.class,"checked---->"+checkedId);
-                switch (checkedId) {
-                    case R.id.test_home:LogUtils.d(TestActivity.class,"This is home");
-                        break;
-                        case R.id.test_red_packet:LogUtils.d(TestActivity.class,"This is redpacket");
-                        break;
-                        case R.id.test_search:LogUtils.d(TestActivity.class,"This is search");
-                        break;
-                        case R.id.test_selected:LogUtils.d(TestActivity.class,"This is selected");
-                        break;
+    @OnClick(R.id.btn_test_sp)
+    public void setData(){
+        UserInfo userInfo=new UserInfo("1234");
+        SharedPreferenceManager.getInstance().setLastUser(userInfo);
+        boolean firstLogin = SharedPreferenceManager.getInstance().isFirstLogin();
+    }
+    @OnClick(R.id.btn_test_sp_get)
+    public void getData(){
 
-                }
-            }
-        });
+        UserInfo lastUser = SharedPreferenceManager.getInstance().getLastUser();
+        tvShowMessage.setText(lastUser.toString());
     }
 
     @Override
