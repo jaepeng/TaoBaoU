@@ -37,6 +37,12 @@ public class SelectedPageLeftAdapter extends RecyclerView.Adapter<SelectedPageLe
         }
 
         SelectedPageCategory.DataBean dataBean = mdata.get(position);
+        if (dataBean.getFavorites_title().equals("秋天必备")){
+            dataBean.setFavorites_title("秋冬必备");
+        }
+        if (dataBean.getFavorites_title().equals("中秋礼品")){
+            dataBean.setFavorites_title("过年礼品");
+        }
         itemTv.setText(dataBean.getFavorites_title());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
