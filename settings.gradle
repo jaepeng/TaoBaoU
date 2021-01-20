@@ -1,3 +1,4 @@
+include ':facelibs'
 include ':baidusearch'
 include ':app',':refreshlibrary'
 rootProject.name='TaoBaoU'
