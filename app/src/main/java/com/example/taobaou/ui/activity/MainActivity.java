@@ -1,5 +1,6 @@
 package com.example.taobaou.ui.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.example.taobaou.ui.fragment.SearchFragment;
 import com.example.taobaou.ui.fragment.SelectedFragment;
 import com.example.taobaou.utils.Constants;
 import com.example.taobaou.utils.LogUtils;
+import com.example.taobaou.utils.SharedPreferenceManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -43,6 +45,15 @@ public class MainActivity extends BaseActivity implements IMainActivity{
     private Unbinder mbind;
     private MyInfoFragment mMyInfoFragment;
     public static final String TAG="MainActivity";
+    //人脸识别使用权限
+    private static final String[] NEEDED_PERMISSIONS = new String[]{
+            Manifest.permission.READ_PHONE_STATE
+    };
+    boolean libraryExists = true;
+    private static final int ACTION_REQUEST_PERMISSIONS = 0x001;
+
+
+
 
 
     public static void startActivity(Context context, String string){
@@ -53,7 +64,10 @@ public class MainActivity extends BaseActivity implements IMainActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.d(TAG, "onCreate::"+SharedPreferenceManager.getInstance().isFirstLogin());
+//        if (){
+//            activeEngine(null);
+//        }
 
 
     }
@@ -187,5 +201,9 @@ public class MainActivity extends BaseActivity implements IMainActivity{
         mNavigationView.setSelectedItemId(R.id.search);
 
     }
+    /**
+     * 激活人脸识别SDK
+     */
+
 
 }

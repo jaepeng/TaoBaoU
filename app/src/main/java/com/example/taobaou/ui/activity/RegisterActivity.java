@@ -1,7 +1,9 @@
 package com.example.taobaou.ui.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -9,12 +11,19 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-import com.example.facelibs.activity.RegisterAndRecognizeActivity;
+import com.arcsoft.face.ActiveFileInfo;
+import com.arcsoft.face.ErrorInfo;
+import com.arcsoft.face.FaceEngine;
+import com.arcsoft.face.enums.RuntimeABI;
 import com.example.taobaou.R;
 import com.example.taobaou.model.message.MessageCode;
 import com.example.taobaou.model.message.MessageEvent;
+import com.example.taobaou.ui.activity.face.FaceRegisetrActivity;
 import com.example.taobaou.utils.Constants;
+import com.example.taobaou.utils.SharedPreferenceManager;
 import com.example.taobaou.utils.ToastUtsils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -27,17 +36,38 @@ import org.json.JSONTokener;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
+import static com.example.taobaou.utils.ToastUtsils.showToast;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText mEdtAccount;
     private EditText mEdtPassword;
     private EditText mEdtRePassword;
     private Map<String, String> mUsermap;
+    public static final String TAG="MainActivity";
+    //人脸识别使用权限
+    private static final String[] NEEDED_PERMISSIONS = new String[]{
+            Manifest.permission.READ_PHONE_STATE
+    };
+    boolean libraryExists = true;
+    private static final int ACTION_REQUEST_PERMISSIONS = 0x001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        if (SharedPreferenceManager.getInstance().isFirstLogin()){
+
+            activeEngine(null);
+        }
         Button btnRegister=findViewById(R.id.btn_register_register);
         Button btnFaceRegister=findViewById(R.id.btn_register_face_register);
         mEdtAccount = findViewById(R.id.edt_register_account);
@@ -68,11 +98,86 @@ public class RegisterActivity extends AppCompatActivity {
                 String account = mEdtAccount.getText().toString();
                 if (checkUserAccount(account)){
 
-                    RegisterAndRecognizeActivity.startActivity(RegisterActivity.this,account);
+                    FaceRegisetrActivity.startActivity(RegisterActivity.this,account);
                 }
 
             }
         });
+    }
+    protected boolean checkPermissions(String[] neededPermissions) {
+        if (neededPermissions == null || neededPermissions.length == 0) {
+            return true;
+        }
+        boolean allGranted = true;
+        for (String neededPermission : neededPermissions) {
+            allGranted &= ContextCompat.checkSelfPermission(this, neededPermission) == PackageManager.PERMISSION_GRANTED;
+        }
+        return allGranted;
+    }
+    public void activeEngine(final View view) {
+        if (!libraryExists) {
+            showToast(getString(R.string.library_not_found));
+            return;
+        }
+        if (!checkPermissions(NEEDED_PERMISSIONS)) {
+            ActivityCompat.requestPermissions(this, NEEDED_PERMISSIONS, ACTION_REQUEST_PERMISSIONS);
+            return;
+        }
+        if (view != null) {
+            view.setClickable(false);
+        }
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> emitter) {
+                RuntimeABI runtimeABI = FaceEngine.getRuntimeABI();
+
+                long start = System.currentTimeMillis();
+                int activeCode = FaceEngine.activeOnline(RegisterActivity.this, com.example.facelibs.common.Constants.APP_ID, com.example.facelibs.common.Constants.SDK_KEY);
+                emitter.onNext(activeCode);
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Integer>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Integer activeCode) {
+                        if (activeCode == ErrorInfo.MOK) {
+//                            showToast(getString(R.string.active_success));
+                        } else if (activeCode == ErrorInfo.MERR_ASF_ALREADY_ACTIVATED) {
+//                            showToast(getString(R.string.already_activated));
+                        } else {
+//                            showToast(getString(R.string.active_failed, activeCode));
+                        }
+
+                        if (view != null) {
+                            view.setClickable(true);
+                        }
+                        ActiveFileInfo activeFileInfo = new ActiveFileInfo();
+                        int res = FaceEngine.getActiveFileInfo(RegisterActivity.this, activeFileInfo);
+                        if (res == ErrorInfo.MOK) {
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        showToast(e.getMessage());
+                        if (view != null) {
+                            view.setClickable(true);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
     }
 
     private boolean checkUserPassword(String password, String repassword) {
