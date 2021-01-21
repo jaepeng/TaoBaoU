@@ -2,6 +2,7 @@ package com.example.taobaou.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -128,6 +129,7 @@ public class MyInfoFragment extends BaseFragment {
             tv_username.setText(messageEvent.getMkeyword());
         }
         if (messageEvent.getMessageCode()==MessageCode.FACEREGISTERSUCCESS){
+            Log.d("jae", "Register success onEvent: "+messageEvent.getMkeyword());
             loginHide(true);
             tv_username.setText(messageEvent.getMkeyword());
         }

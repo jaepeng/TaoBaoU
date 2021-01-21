@@ -33,6 +33,7 @@ public class FaceServer {
     public static final String IMG_SUFFIX = ".jpg";
     private static FaceEngine faceEngine = null;
     private static FaceServer faceServer = null;
+    //todo:人脸信息存储
     private static List<FaceRegisterInfo> faceRegisterInfoList;
     public static String ROOT_PATH;
     /**
@@ -456,6 +457,7 @@ public class FaceServer {
         isProcessing = true;
         for (int i = 0; i < faceRegisterInfoList.size(); i++) {
             tempFaceFeature.setFeatureData(faceRegisterInfoList.get(i).getFeatureData());
+            //todo:人脸特征比对
             faceEngine.compareFaceFeature(faceFeature, tempFaceFeature, faceSimilar);
             if (faceSimilar.getScore() > maxSimilar) {
                 maxSimilar = faceSimilar.getScore();

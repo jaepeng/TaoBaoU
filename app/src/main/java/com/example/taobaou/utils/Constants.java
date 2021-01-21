@@ -27,7 +27,20 @@ public class Constants {
 
     public static final String RETURN_MAIN_FROM_OTHER ="return_main_from_other";
 
-    public static final int GO_TO_MYINFO_FRAGMENT=5;
+    /**
+     * 要到哪个Fragment去
+     */
+    public static final String GO_TO_WHAT_FRAGMENT="go_to_what_fragment";
+
+    /**
+     * 到MyInfoFragment
+     */
+    public static final String GO_TO_MYINFO_FRAGMENT="go_to_myinfo_fragment";
+
+    /**
+     * 传回来的数据
+     */
+    public static final String RETURN_MAIN_FROM_OTHER_DATA="return_main_from_other_data";
 
 
 }

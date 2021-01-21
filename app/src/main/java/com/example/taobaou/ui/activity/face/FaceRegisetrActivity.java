@@ -41,8 +41,6 @@ import com.example.facelibs.faceserver.CompareResult;
 import com.example.facelibs.faceserver.FaceServer;
 import com.example.facelibs.model.DrawInfo;
 import com.example.facelibs.model.FacePreviewInfo;
-import com.example.facelibs.model.message.MessageCode;
-import com.example.facelibs.model.message.MessageEvent;
 import com.example.facelibs.util.ConfigUtil;
 import com.example.facelibs.util.DrawHelper;
 import com.example.facelibs.util.camera.CameraHelper;
@@ -56,6 +54,8 @@ import com.example.facelibs.util.face.RequestLivenessStatus;
 import com.example.facelibs.widget.FaceRectView;
 import com.example.facelibs.widget.FaceSearchResultAdapter;
 import com.example.taobaou.R;
+import com.example.taobaou.model.message.MessageCode;
+import com.example.taobaou.model.message.MessageEvent;
 import com.example.taobaou.utils.ToastUtsils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -206,8 +206,9 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
         // Activity启动后就锁定为启动时的方向
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
         //本地人脸库初始化
-        FaceServer.getInstance().clearAllFaces(this);
+//        FaceServer.getInstance().clearAllFaces(this);
         FaceServer.getInstance().init(this);
+
 
         initView();
     }
@@ -686,14 +687,18 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
                             faceHelper.setName(requestId, getString(com.arcsoft.arcfacedemo.R.string.recognize_success_notice, compareResult.getUserName()));
                             mBtnRegister.setClickable(false);
                             Toast.makeText(FaceRegisetrActivity.this, "识别通过啦!", Toast.LENGTH_SHORT).show();
+                            Intent intent=new Intent();
+                            intent.putExtra(com.example.taobaou.utils.Constants.RETURN_MAIN_FROM_OTHER_DATA,compareResult.getUserName());
+                            intent.putExtra(com.example.taobaou.utils.Constants.GO_TO_WHAT_FRAGMENT, com.example.taobaou.utils.Constants.GO_TO_MYINFO_FRAGMENT);
                             EventBus.getDefault().post(new MessageEvent(MessageCode.FACEREGISTERSUCCESS,compareResult.getUserName()));
-//                            finish();
+//                            MainActivity.startActivity(FaceRegisetrActivity.this,intent);
+                            finish();
                             //todo:识别通过,去通知MyInfoFragment登录
                             Log.d(TAG, "onNext: 识别通过！！");
 
                         } else {
 
-                            mBtnRegister.setClickable(true);
+
                             faceHelper.setName(requestId, getString(com.arcsoft.arcfacedemo.R.string.recognize_failed_notice, "NOT_REGISTERED"));
                             retryRecognizeDelayed(requestId);
                         }
@@ -702,6 +707,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
                     @Override
                     public void onError(Throwable e) {
                         //todo:识别未通过
+                        mBtnRegister.setClickable(true);
                         Log.d(TAG, "onNext: 识别没通过！！");
                         faceHelper.setName(requestId, getString(com.arcsoft.arcfacedemo.R.string.recognize_failed_notice, "NOT_REGISTERED"));
                         retryRecognizeDelayed(requestId);
@@ -823,7 +829,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
 
         FaceServer.getInstance().unInit();
         super.onDestroy();
-        super.onDestroy();
+
     }
     private void retryLivenessDetectDelayed(final Integer requestId) {
         Observable.timer(FAIL_RETRY_INTERVAL, TimeUnit.MILLISECONDS)

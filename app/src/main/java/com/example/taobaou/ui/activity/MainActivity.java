@@ -52,13 +52,35 @@ public class MainActivity extends BaseActivity implements IMainActivity{
     boolean libraryExists = true;
     private static final int ACTION_REQUEST_PERMISSIONS = 0x001;
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent=getIntent();
+        String account = intent.getStringExtra(Constants.RETURN_MAIN_FROM_OTHER_DATA);
+        String whatfragment = intent.getStringExtra(Constants.GO_TO_WHAT_FRAGMENT);
+        Log.d(TAG, "jaeonStart: account"+account+" whatfragment:"+whatfragment);
+        if (!TextUtils.isEmpty(account)){
+            //如果返回来的用户名不为空
+            EventBus.getDefault().postSticky(new MessageEvent(MessageCode.FACEREGISTERSUCCESS,account));
+        }
+        if (TextUtils.isEmpty(whatfragment)){
+            return;
+        }else{
+            if (whatfragment.equals(Constants.GO_TO_MYINFO_FRAGMENT)){
+                //跳转到我的信息界面
+                switchFragment(mMyInfoFragment);
+            }
+        }
+    }
 
+    public static void startActivity(Context context, Intent saveIntent){
 
-
-
-    public static void startActivity(Context context, String string){
         Intent intent=new Intent(context,MainActivity.class);
-        intent.putExtra(Constants.RETURN_MAIN_FROM_OTHER,string);
+        String whatFragmentString = saveIntent.getStringExtra(Constants.GO_TO_WHAT_FRAGMENT);
+        String keydata = saveIntent.getStringExtra(Constants.RETURN_MAIN_FROM_OTHER_DATA);
+        Log.d(TAG, "startActivity: string"+whatFragmentString);
+        intent.putExtra(Constants.GO_TO_WHAT_FRAGMENT,whatFragmentString);
+        intent.putExtra(Constants.RETURN_MAIN_FROM_OTHER_DATA,keydata);
         context.startActivity(intent);
     }
     @Override
@@ -75,16 +97,7 @@ public class MainActivity extends BaseActivity implements IMainActivity{
     @Override
     protected void onStart() {
         super.onStart();
-        Intent intent=getIntent();
-        String string = intent.getStringExtra(Constants.RETURN_MAIN_FROM_OTHER);
-        if (TextUtils.isEmpty(string)){
-            return;
-        }else{
-            if (Integer.valueOf(string)==Constants.GO_TO_MYINFO_FRAGMENT){
-                //跳转到我的信息界面
-                switchFragment(mMyInfoFragment);
-            }
-        }
+
 
     }
 
@@ -115,6 +128,7 @@ public class MainActivity extends BaseActivity implements IMainActivity{
         initFragment();
 
     }
+
 
     @Override
     protected int getLayoutId() {
@@ -204,6 +218,13 @@ public class MainActivity extends BaseActivity implements IMainActivity{
     /**
      * 激活人脸识别SDK
      */
+//    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+//    public void onEvent(MessageEvent messageEvent) {
+//        if (messageEvent.getMessageCode()==MessageCode.FACEREGISTERSUCCESS){
+//            Log.d(TAG, "jae onEvent: switchFragment");
+//            switchFragment(mMyInfoFragment);
+//        }
+//    }
 
 
 }

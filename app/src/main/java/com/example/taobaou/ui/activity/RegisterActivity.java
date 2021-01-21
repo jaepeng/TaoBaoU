@@ -99,6 +99,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if (checkUserAccount(account)){
 
                     FaceRegisetrActivity.startActivity(RegisterActivity.this,account);
+                    finish();
                 }
 
             }
