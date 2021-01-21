@@ -1,4 +1,4 @@
-package com.example.taobaou.model.message;
+package com.example.facelibs.model.message;
 
 public class MessageCode {
     //得到了图片分析结果

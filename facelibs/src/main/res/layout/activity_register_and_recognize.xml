@@ -18,6 +18,7 @@
     </FrameLayout>
 
     <Switch
+        android:visibility="gone"
         android:id="@+id/single_camera_switch_liveness_detect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,6 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <Button
+            android:id="@+id/btn_rar_regisetr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="register"
@@ -44,6 +46,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:visibility="gone"
         android:id="@+id/single_camera_recycler_view_person"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

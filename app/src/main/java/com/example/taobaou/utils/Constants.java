@@ -23,6 +23,11 @@ public class Constants {
     public static final String SP_KEY_HISTORY_TIECKT_URL="sp_key_history_tieckt_url";
     public static final String SP_KEY_HISTORY_TIECKT_CODE="sp_key_history_tieckt_code";
 
+    /**************************************************从别的地方跳回ManActivity**************************************************/
+
+    public static final String RETURN_MAIN_FROM_OTHER ="return_main_from_other";
+
+    public static final int GO_TO_MYINFO_FRAGMENT=5;
 
 
 }

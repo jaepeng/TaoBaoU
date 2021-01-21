@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.facelibs.activity.RegisterAndRecognizeActivity;
 import com.example.taobaou.R;
 import com.example.taobaou.model.message.MessageCode;
 import com.example.taobaou.model.message.MessageEvent;
@@ -38,6 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         Button btnRegister=findViewById(R.id.btn_register_register);
+        Button btnFaceRegister=findViewById(R.id.btn_register_face_register);
         mEdtAccount = findViewById(R.id.edt_register_account);
         mEdtPassword = findViewById(R.id.edt_register_password);
         mEdtRePassword = findViewById(R.id.edt__register_repassword);
@@ -57,6 +59,17 @@ public class RegisterActivity extends AppCompatActivity {
 
                 }
 
+
+            }
+        });
+        btnFaceRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String account = mEdtAccount.getText().toString();
+                if (checkUserAccount(account)){
+
+                    RegisterAndRecognizeActivity.startActivity(RegisterActivity.this,account);
+                }
 
             }
         });

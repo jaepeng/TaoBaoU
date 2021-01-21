@@ -1,6 +1,9 @@
 package com.example.taobaou.ui.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -18,6 +21,7 @@ import com.example.taobaou.ui.fragment.MyInfoFragment;
 import com.example.taobaou.ui.fragment.OnSellFragment;
 import com.example.taobaou.ui.fragment.SearchFragment;
 import com.example.taobaou.ui.fragment.SelectedFragment;
+import com.example.taobaou.utils.Constants;
 import com.example.taobaou.utils.LogUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -40,6 +44,12 @@ public class MainActivity extends BaseActivity implements IMainActivity{
     private MyInfoFragment mMyInfoFragment;
     public static final String TAG="MainActivity";
 
+
+    public static void startActivity(Context context, String string){
+        Intent intent=new Intent(context,MainActivity.class);
+        intent.putExtra(Constants.RETURN_MAIN_FROM_OTHER,string);
+        context.startActivity(intent);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +61,16 @@ public class MainActivity extends BaseActivity implements IMainActivity{
     @Override
     protected void onStart() {
         super.onStart();
-
+        Intent intent=getIntent();
+        String string = intent.getStringExtra(Constants.RETURN_MAIN_FROM_OTHER);
+        if (TextUtils.isEmpty(string)){
+            return;
+        }else{
+            if (Integer.valueOf(string)==Constants.GO_TO_MYINFO_FRAGMENT){
+                //跳转到我的信息界面
+                switchFragment(mMyInfoFragment);
+            }
+        }
 
     }
 

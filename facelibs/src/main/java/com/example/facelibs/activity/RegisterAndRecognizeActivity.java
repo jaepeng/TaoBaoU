@@ -1,6 +1,8 @@
 package com.example.facelibs.activity;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.hardware.Camera;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -30,10 +33,13 @@ import com.arcsoft.face.GenderInfo;
 import com.arcsoft.face.LivenessInfo;
 import com.arcsoft.face.enums.DetectFaceOrientPriority;
 import com.arcsoft.face.enums.DetectMode;
+import com.example.facelibs.common.Constants;
 import com.example.facelibs.faceserver.CompareResult;
 import com.example.facelibs.faceserver.FaceServer;
 import com.example.facelibs.model.DrawInfo;
 import com.example.facelibs.model.FacePreviewInfo;
+import com.example.facelibs.model.message.MessageCode;
+import com.example.facelibs.model.message.MessageEvent;
 import com.example.facelibs.util.ConfigUtil;
 import com.example.facelibs.util.DrawHelper;
 import com.example.facelibs.util.camera.CameraHelper;
@@ -46,6 +52,8 @@ import com.example.facelibs.util.face.RequestFeatureStatus;
 import com.example.facelibs.util.face.RequestLivenessStatus;
 import com.example.facelibs.widget.FaceRectView;
 import com.example.facelibs.widget.FaceSearchResultAdapter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -167,6 +175,14 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
             Manifest.permission.READ_PHONE_STATE
 
     };
+    private Button mBtnRegister;
+
+    public static void  startActivity(Context context,String string){
+        Intent intent=new Intent(context,RegisterAndRecognizeActivity.class);
+        intent.putExtra(Constants.FACE_REGISTER_ACCOUNT,string);
+        context.startActivity(intent);
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +190,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
         setContentView(R.layout.activity_register_and_recognize);
         //保持亮屏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WindowManager.LayoutParams attributes = getWindow().getAttributes();
@@ -190,6 +207,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
     }
 
     private void initView() {
+        mBtnRegister = findViewById(R.id.btn_rar_regisetr);
         previewView = findViewById(R.id.single_camera_texture_preview);
         //在布局结束后才做初始化操作
         previewView.getViewTreeObserver().addOnGlobalLayoutListener(this);
@@ -514,14 +532,19 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
     }
 
     private void registerFace(final byte[] nv21, final List<FacePreviewInfo> facePreviewInfoList) {
+        //获得传入的用户名
+        Intent intent=getIntent();
+        String accountString = intent.getStringExtra(Constants.FACE_REGISTER_ACCOUNT);
         if (registerStatus == REGISTER_STATUS_READY && facePreviewInfoList != null && facePreviewInfoList.size() > 0) {
             registerStatus = REGISTER_STATUS_PROCESSING;
             Observable.create(new ObservableOnSubscribe<Boolean>() {
                 @Override
                 public void subscribe(ObservableEmitter<Boolean> emitter) {
+                    //todo:人脸注册在这里进行,name也在这里设置.将注册功能放在登录完.
 
+                    //之后识别通过了就会显示这个名字
                     boolean success = FaceServer.getInstance().registerNv21(RegisterAndRecognizeActivity.this, nv21.clone(), previewSize.width, previewSize.height,
-                            facePreviewInfoList.get(0).getFaceInfo(), "registered " + faceHelper.getTrackedFaceCount());
+                            facePreviewInfoList.get(0).getFaceInfo(), accountString+" "/*faceHelper.getTrackedFaceCount()*/);
                     emitter.onNext(success);
                 }
             })
@@ -578,7 +601,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
                 color = RecognizeColor.COLOR_FAILED;
             }
 
-            //todo：这里设置注册名字
+            //todo：这里设置注册名字,登录过后,默认用户账户就是注册名字+id
             drawInfoList.add(new DrawInfo(drawHelper.adjustRect(facePreviewInfoList.get(i).getFaceInfo().getRect()),
                     GenderInfo.UNKNOWN, AgeInfo.UNKNOWN_AGE, liveness == null ? LivenessInfo.UNKNOWN : liveness, color,
                     name == null ? String.valueOf("你是第几个"+facePreviewInfoList.get(i).getTrackId()) : name));
@@ -643,6 +666,12 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
 
     }
 
+    /**
+     * 人脸比对
+     * @param frFace
+     * @param requestId
+     */
+
     private void searchFace(final FaceFeature frFace, final Integer requestId) {
         Observable
                 .create(new ObservableOnSubscribe<CompareResult>() {
@@ -696,14 +725,18 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
                                 compareResultList.add(compareResult);
                                 adapter.notifyItemInserted(compareResultList.size() - 1);
                             }
-                            //todo:识别通过在这里
                             requestFeatureStatusMap.put(requestId, RequestFeatureStatus.SUCCEED);
                             faceHelper.setName(requestId, getString(R.string.recognize_success_notice, compareResult.getUserName()));
+                            mBtnRegister.setClickable(false);
                             Toast.makeText(RegisterAndRecognizeActivity.this, "识别通过啦!", Toast.LENGTH_SHORT).show();
+                            EventBus.getDefault().post(new MessageEvent(MessageCode.FACEREGISTERSUCCESS,compareResult.getUserName()));
                             finish();
+                            //todo:识别通过,去通知MyInfoFragment登录
                             Log.d(TAG, "onNext: 识别通过！！");
 
                         } else {
+                            //todo:识别未通过
+                            mBtnRegister.setClickable(true);
                             faceHelper.setName(requestId, getString(R.string.recognize_failed_notice, "NOT_REGISTERED"));
                             retryRecognizeDelayed(requestId);
                         }

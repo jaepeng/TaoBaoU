@@ -127,6 +127,10 @@ public class MyInfoFragment extends BaseFragment {
             loginHide(true);
             tv_username.setText(messageEvent.getMkeyword());
         }
+        if (messageEvent.getMessageCode()==MessageCode.FACEREGISTERSUCCESS){
+            loginHide(true);
+            tv_username.setText(messageEvent.getMkeyword());
+        }
 
 
     }

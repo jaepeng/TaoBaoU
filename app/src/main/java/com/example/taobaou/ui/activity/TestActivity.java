@@ -78,10 +78,7 @@ public class TestActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        if (SharedPreferenceManager.getInstance().isFirstLogin()){
 
-            activeEngine(null);
-        }
 
     }
 
