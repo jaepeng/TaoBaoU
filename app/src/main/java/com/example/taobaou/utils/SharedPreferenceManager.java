@@ -58,6 +58,15 @@ public class SharedPreferenceManager {
         return user;
 
     }
+
+    /**
+     * 删除已经存在的key所对应的值
+     * @param key
+     */
+    public void remove(String key){
+
+        getSpEdit().remove(key);
+    }
     /**
      * 判断是否是第一次登录
      */

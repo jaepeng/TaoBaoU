@@ -7,6 +7,7 @@ import com.example.taobaou.model.domain.SearchRcommend;
 import com.example.taobaou.model.domain.SearchResult;
 import com.example.taobaou.model.domain.SelectedContent;
 import com.example.taobaou.model.domain.SelectedPageCategory;
+import com.example.taobaou.model.domain.TicketHistory;
 import com.example.taobaou.model.domain.TicketParams;
 import com.example.taobaou.model.domain.TicketResult;
 import com.example.taobaou.model.domain.User;
@@ -57,5 +58,8 @@ public interface Api {
     @FormUrlEncoded
     @POST("/firstdemo/login")
     Call<User> login(@Field("username") String useraccount,@Field("password") String password);
+
+    @POST("/ticketHistory/add")
+    Call<Boolean> addTicketHistory(@Body TicketHistory ticketHistory);
 
 }

@@ -19,6 +19,8 @@ import com.example.taobaou.model.message.MessageCode;
 import com.example.taobaou.model.message.MessageEvent;
 import com.example.taobaou.ui.activity.LoginActivity;
 import com.example.taobaou.ui.activity.RegisterActivity;
+import com.example.taobaou.utils.SharedPreferenceManager;
+import com.example.taobaou.utils.SpConstans;
 import com.example.taobaou.utils.engine.GlideEngine;
 import com.huantansheng.easyphotos.EasyPhotos;
 import com.huantansheng.easyphotos.callback.SelectCallback;
@@ -84,6 +86,7 @@ public class MyInfoFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 loginHide(false);
+                SharedPreferenceManager.getInstance().remove(SpConstans.LAST_USER_ACCOUNT);
             }
         });
         tv_couponHistory.setOnClickListener(new View.OnClickListener() {
