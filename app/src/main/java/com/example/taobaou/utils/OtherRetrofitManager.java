@@ -1,5 +1,7 @@
 package com.example.taobaou.utils;
 
+import com.example.taobaou.model.Api;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -19,9 +21,10 @@ public class OtherRetrofitManager {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
+
     }
 
-    public Retrofit getRetrofit(){
-        return mRetrofit;
+    public Api getApiService(){
+        return mRetrofit.create(Api.class);
     }
 }

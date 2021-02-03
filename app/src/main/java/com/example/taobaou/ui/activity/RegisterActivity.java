@@ -50,7 +50,6 @@ import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import static com.example.taobaou.utils.ToastUtsils.showToast;
 
@@ -78,8 +77,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             activeEngine(null);
         }
-        Retrofit retrofit = OtherRetrofitManager.getInstance().getRetrofit();
-        mApi = retrofit.create(Api.class);
+        mApi = OtherRetrofitManager.getInstance().getApiService();
         Button btnRegister=findViewById(R.id.btn_register_register);
         Button btnFaceRegister=findViewById(R.id.btn_register_face_register);
         mEdtAccount = findViewById(R.id.edt_register_account);
@@ -101,9 +99,16 @@ public class RegisterActivity extends AppCompatActivity {
                                 Log.d(TAG, "onResponse: code"+response.code());
                                 if (response.code()==200){
                                     Log.d(TAG, "onResponse: "+response.body());
-                                    ToastUtsils.showToast("注册成功");
-                                    EventBus.getDefault().post(new MessageEvent(MessageCode.REGISTERUSERACCOUNT,mEdtAccount.getText().toString()));
-                                    finish();
+                                    if (response.body().booleanValue()){
+                                        ToastUtsils.showToast("注册成功");
+                                        EventBus.getDefault().post(new MessageEvent(MessageCode.REGISTERUSERACCOUNT,mEdtAccount.getText().toString()));
+                                        finish();
+                                    }else{
+                                        ToastUtsils.showToast("注册失败,账户已存在");
+                                    }
+
+                                }else{
+                                    ToastUtsils.showToast("注册失败");
                                 }
                             }
 

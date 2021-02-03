@@ -10,9 +10,12 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.taobaou.R;
+import com.example.taobaou.model.Api;
+import com.example.taobaou.model.domain.User;
 import com.example.taobaou.model.message.MessageCode;
 import com.example.taobaou.model.message.MessageEvent;
 import com.example.taobaou.utils.Constants;
+import com.example.taobaou.utils.OtherRetrofitManager;
 import com.example.taobaou.utils.ToastUtsils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -24,12 +27,17 @@ import org.json.JSONTokener;
 import java.util.HashMap;
 import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private String mAccount;
     private String mPassword;
     private Button mBtnLogin;
     private EditText mEdtAccount;
     private EditText mEdtPassword;
+    private Api mApi;
 
 
     @Override
@@ -40,26 +48,36 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mEdtAccount = findViewById(R.id.edt_login_account);
         mEdtPassword = findViewById(R.id.edt__login_password);
         mBtnLogin.setOnClickListener(this);
+        mApi= OtherRetrofitManager.getInstance().getApiService();
     }
 
     private void loginByPassword(String account, String password) {
-        Map<String, String> map = getMap(this);
-        if (map.containsKey(account)){
-            if (map.get(account).equals(password)){
-              //跳转到MyInfoFragment界面
-              //通知Fragment将相关控件显示,然后finish该界面也可以
-                //todo:记录最后一次登录的账户:之后都显示它的内容
 
-                EventBus.getDefault().post(new MessageEvent(MessageCode.LOGINUSERACCOUNT,account));
-                finish();
+        Call<User> task = mApi.login(account, password);
+        task.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.code()==200){
+                    ToastUtsils.showToast("登录成功");
+                    if (response.body()!=null){
+                        EventBus.getDefault().post(new MessageEvent(MessageCode.LOGINUSERACCOUNT,account));
+                        finish();
+                    }else{
+                        ToastUtsils.showToast("登录失败");
+                    }
 
+                }else{
+                    ToastUtsils.showToast("登录失败");
+                }
 
-            }else{
-                ToastUtsils.showToast("密码不正确!");
             }
-        }else {
-            ToastUtsils.showToast("账号不正确!");
-        }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                ToastUtsils.showToast("登录失败");
+            }
+        });
+
     }
 //提取
     public static Map<String,String> getMap(Context context) {

@@ -13,6 +13,8 @@ import com.example.taobaou.model.domain.User;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -43,8 +45,17 @@ public interface Api {
     @GET("search")
     Call<SearchResult> doSearch(@Query("page")int page,@Query("keyword")String keyword);
 
+    /**
+     * 注册用户
+     * @param user
+     * @return
+     */
     @POST("/firstdemo/add")
     Call<Boolean> addUser(@Body User user);
 
+
+    @FormUrlEncoded
+    @POST("/firstdemo/login")
+    Call<User> login(@Field("username") String useraccount,@Field("password") String password);
 
 }
