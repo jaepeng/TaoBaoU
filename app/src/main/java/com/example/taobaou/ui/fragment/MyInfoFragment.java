@@ -2,6 +2,7 @@ package com.example.taobaou.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,7 @@ public class MyInfoFragment extends BaseFragment {
     Button btnRegister;
     @BindView(R.id.btn_myinfo_unregister)
     Button btnUnRegister;
+    private String mLastUserAccount;
 
     @Override
     protected int getRootViewResid() {
@@ -59,6 +61,8 @@ public class MyInfoFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        mLastUserAccount = SharedPreferenceManager.getInstance().getString(SpConstans.LAST_USER_ACCOUNT);
+
     }
 
     @Override
@@ -67,6 +71,10 @@ public class MyInfoFragment extends BaseFragment {
         setUpState(State.SUCCESS);
         tv_bar_title.setText("我的信息");
         loginHide(false);
+        if (!TextUtils.isEmpty(mLastUserAccount)){
+            loginHide(true);
+            tv_username.setText(mLastUserAccount);
+        }
         //点击注册按钮进入注册界面
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +94,7 @@ public class MyInfoFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 loginHide(false);
-                SharedPreferenceManager.getInstance().remove(SpConstans.LAST_USER_ACCOUNT);
+                SharedPreferenceManager.getInstance().delete(SpConstans.LAST_USER_ACCOUNT);
             }
         });
         tv_couponHistory.setOnClickListener(new View.OnClickListener() {

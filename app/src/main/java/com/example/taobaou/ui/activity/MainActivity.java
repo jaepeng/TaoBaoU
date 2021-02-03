@@ -24,7 +24,6 @@ import com.example.taobaou.ui.fragment.SearchFragment;
 import com.example.taobaou.ui.fragment.SelectedFragment;
 import com.example.taobaou.utils.Constants;
 import com.example.taobaou.utils.LogUtils;
-import com.example.taobaou.utils.SharedPreferenceManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -86,7 +85,6 @@ public class MainActivity extends BaseActivity implements IMainActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate::"+SharedPreferenceManager.getInstance().isFirstLogin());
 //        if (){
 //            activeEngine(null);
 //        }

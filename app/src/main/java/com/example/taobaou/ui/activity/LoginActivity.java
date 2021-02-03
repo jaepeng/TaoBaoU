@@ -17,6 +17,7 @@ import com.example.taobaou.model.message.MessageEvent;
 import com.example.taobaou.utils.Constants;
 import com.example.taobaou.utils.OtherRetrofitManager;
 import com.example.taobaou.utils.SharedPreferenceManager;
+import com.example.taobaou.utils.SpConstans;
 import com.example.taobaou.utils.ToastUtsils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -61,7 +62,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (response.code()==200){
                     ToastUtsils.showToast("登录成功");
                     if (response.body()!=null){
-                        SharedPreferenceManager.getInstance().setLastUser(response.body());
+                        SharedPreferenceManager.getInstance().putValue(SpConstans.LAST_USER_ACCOUNT,response.body().getAccount());
                         EventBus.getDefault().post(new MessageEvent(MessageCode.LOGINUSERACCOUNT,account));
                         finish();
                     }else{

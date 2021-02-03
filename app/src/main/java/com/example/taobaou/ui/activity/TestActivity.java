@@ -16,8 +16,6 @@ import com.arcsoft.face.enums.RuntimeABI;
 import com.example.facelibs.common.Constants;
 import com.example.taobaou.R;
 import com.example.taobaou.base.BaseActivity;
-import com.example.taobaou.model.domain.User;
-import com.example.taobaou.utils.SharedPreferenceManager;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -87,8 +85,6 @@ public class TestActivity extends BaseActivity {
     @OnClick(R.id.btn_test_sp_get)
     public void getData(){
 
-        User lastUser = SharedPreferenceManager.getInstance().getLastUser();
-        tvShowMessage.setText(lastUser.toString());
     }
 
     @Override

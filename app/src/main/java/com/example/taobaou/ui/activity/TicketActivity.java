@@ -23,13 +23,13 @@ import com.example.taobaou.model.Api;
 import com.example.taobaou.model.domain.TicketHistory;
 import com.example.taobaou.model.domain.TicketParams;
 import com.example.taobaou.model.domain.TicketResult;
-import com.example.taobaou.model.domain.User;
 import com.example.taobaou.presenter.ITicketPresenter;
 import com.example.taobaou.utils.Constants;
 import com.example.taobaou.utils.LogUtils;
 import com.example.taobaou.utils.OtherRetrofitManager;
 import com.example.taobaou.utils.PresentManager;
 import com.example.taobaou.utils.SharedPreferenceManager;
+import com.example.taobaou.utils.SpConstans;
 import com.example.taobaou.utils.ToastUtsils;
 import com.example.taobaou.utils.UrlUtils;
 import com.example.taobaou.view.ITicketPagerCallback;
@@ -127,11 +127,7 @@ public class TicketActivity extends BaseActivity implements ITicketPagerCallback
                 ClipData clipdata = ClipData.newPlainText("sob_tao_bao_ticket_code", code);
                 cm.setPrimaryClip(clipdata);
                 //todo:复制后,保留复制的历史记录.
-                User lastUser = SharedPreferenceManager.getInstance().getLastUser();
-                String account="";
-                if (lastUser!=null){
-                    account=lastUser.getAccount();
-                }
+                String account = SharedPreferenceManager.getInstance().getString(SpConstans.LAST_USER_ACCOUNT);
                 Api apiService = OtherRetrofitManager.getInstance().getApiService();
                 Call<Boolean> task = apiService.addTicketHistory(new TicketHistory(UrlUtils.getCoverPath(mUrl), account,code ));
                 task.enqueue(new Callback<Boolean>() {

@@ -17,6 +17,7 @@ import com.arcsoft.face.enums.RuntimeABI;
 import com.example.facelibs.common.Constants;
 import com.example.taobaou.R;
 import com.example.taobaou.utils.SharedPreferenceManager;
+import com.example.taobaou.utils.SpConstans;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -43,8 +44,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
         mbind = ButterKnife.bind(this);
-        if (SharedPreferenceManager.getInstance().isFirstLogin()){
-
+        if (SharedPreferenceManager.getInstance().getBoolean(SpConstans.FIRST_LOGIN)){
+            SharedPreferenceManager.getInstance().putValue(SpConstans.FIRST_LOGIN,false);
             activeEngine(null);
         }
         initView();

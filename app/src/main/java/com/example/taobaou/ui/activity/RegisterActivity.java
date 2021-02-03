@@ -28,6 +28,7 @@ import com.example.taobaou.ui.activity.face.FaceRegisetrActivity;
 import com.example.taobaou.utils.Constants;
 import com.example.taobaou.utils.OtherRetrofitManager;
 import com.example.taobaou.utils.SharedPreferenceManager;
+import com.example.taobaou.utils.SpConstans;
 import com.example.taobaou.utils.ToastUtsils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -73,7 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        if (SharedPreferenceManager.getInstance().isFirstLogin()){
+        if (SharedPreferenceManager.getInstance().getBoolean(SpConstans.FIRST_LOGIN)){
 
             activeEngine(null);
         }
