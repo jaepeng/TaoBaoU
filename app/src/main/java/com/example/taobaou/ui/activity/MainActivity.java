@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity implements IMainActivity{
         Log.d(TAG, "jaeonStart: account"+account+" whatfragment:"+whatfragment);
         if (!TextUtils.isEmpty(account)){
             //如果返回来的用户名不为空
-            EventBus.getDefault().postSticky(new MessageEvent(MessageCode.FACEREGISTERSUCCESS,account));
+            EventBus.getDefault().postSticky(new MessageEvent(MessageCode.FACE_RECOGNIZED_SUCCESS,account));
         }
         if (TextUtils.isEmpty(whatfragment)){
             return;

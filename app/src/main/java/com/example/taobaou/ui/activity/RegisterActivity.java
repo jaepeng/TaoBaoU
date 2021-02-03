@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,10 +20,13 @@ import com.arcsoft.face.ErrorInfo;
 import com.arcsoft.face.FaceEngine;
 import com.arcsoft.face.enums.RuntimeABI;
 import com.example.taobaou.R;
+import com.example.taobaou.model.Api;
+import com.example.taobaou.model.domain.User;
 import com.example.taobaou.model.message.MessageCode;
 import com.example.taobaou.model.message.MessageEvent;
 import com.example.taobaou.ui.activity.face.FaceRegisetrActivity;
 import com.example.taobaou.utils.Constants;
+import com.example.taobaou.utils.OtherRetrofitManager;
 import com.example.taobaou.utils.SharedPreferenceManager;
 import com.example.taobaou.utils.ToastUtsils;
 
@@ -43,6 +47,10 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import static com.example.taobaou.utils.ToastUtsils.showToast;
 
@@ -53,12 +61,14 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText mEdtRePassword;
     private Map<String, String> mUsermap;
     public static final String TAG="MainActivity";
+    private Api mApi;
     //人脸识别使用权限
     private static final String[] NEEDED_PERMISSIONS = new String[]{
             Manifest.permission.READ_PHONE_STATE
     };
     boolean libraryExists = true;
     private static final int ACTION_REQUEST_PERMISSIONS = 0x001;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +78,14 @@ public class RegisterActivity extends AppCompatActivity {
 
             activeEngine(null);
         }
+        Retrofit retrofit = OtherRetrofitManager.getInstance().getRetrofit();
+        mApi = retrofit.create(Api.class);
         Button btnRegister=findViewById(R.id.btn_register_register);
         Button btnFaceRegister=findViewById(R.id.btn_register_face_register);
         mEdtAccount = findViewById(R.id.edt_register_account);
         mEdtPassword = findViewById(R.id.edt_register_password);
         mEdtRePassword = findViewById(R.id.edt__register_repassword);
+
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,12 +93,27 @@ public class RegisterActivity extends AppCompatActivity {
                 String registeraccount = mEdtAccount.getText().toString();
                 if (checkUserAccount(registeraccount)){
                     if (checkUserPassword(mEdtPassword.getText().toString(),mEdtRePassword.getText().toString())) {
-                        mUsermap = new LinkedHashMap<>();
-                        mUsermap.put(registeraccount,mEdtPassword.getText().toString());
-                        setMap(RegisterActivity.this,mUsermap);
-                        EventBus.getDefault().post(new MessageEvent(MessageCode.REGISTERUSERACCOUNT,mEdtAccount.getText().toString()));
-                        finish();
+                       //todo:账号密码都输入正确,去注册
+                        Call<Boolean> task = mApi.addUser(new User(registeraccount, mEdtPassword.getText().toString()));
+                        task.enqueue(new Callback<Boolean>() {
+                            @Override
+                            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                                Log.d(TAG, "onResponse: code"+response.code());
+                                if (response.code()==200){
+                                    Log.d(TAG, "onResponse: "+response.body());
+                                    ToastUtsils.showToast("注册成功");
+                                    EventBus.getDefault().post(new MessageEvent(MessageCode.REGISTERUSERACCOUNT,mEdtAccount.getText().toString()));
+                                    finish();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Boolean> call, Throwable t) {
+                                ToastUtsils.showToast("注册失败");
+                            }
+                        });
                     }
+
 
                 }
 

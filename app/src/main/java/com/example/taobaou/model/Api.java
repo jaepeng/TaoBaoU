@@ -9,6 +9,7 @@ import com.example.taobaou.model.domain.SelectedContent;
 import com.example.taobaou.model.domain.SelectedPageCategory;
 import com.example.taobaou.model.domain.TicketParams;
 import com.example.taobaou.model.domain.TicketResult;
+import com.example.taobaou.model.domain.User;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -41,4 +42,9 @@ public interface Api {
 
     @GET("search")
     Call<SearchResult> doSearch(@Query("page")int page,@Query("keyword")String keyword);
+
+    @POST("/firstdemo/add")
+    Call<Boolean> addUser(@Body User user);
+
+
 }

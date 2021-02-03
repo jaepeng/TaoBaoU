@@ -181,6 +181,8 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
 
     };
     private Button mBtnRegister;
+    //用来判断是拿来注册还是登录
+    private boolean isRegister=true;
 
     public static void  startActivity(Context context, String string){
         Intent intent=new Intent(context, FaceRegisetrActivity.class);
@@ -510,6 +512,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
         //获得传入的用户名
         Intent intent=getIntent();
         String accountString = intent.getStringExtra(Constants.FACE_REGISTER_ACCOUNT);
+
         if (registerStatus == REGISTER_STATUS_READY && facePreviewInfoList != null && facePreviewInfoList.size() > 0) {
             registerStatus = REGISTER_STATUS_PROCESSING;
             Observable.create(new ObservableOnSubscribe<Boolean>() {
@@ -537,6 +540,8 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
                             String result = success ? "register success!" : "register failed!";
                             ToastUtsils.showToast(result);
                             registerStatus = REGISTER_STATUS_DONE;
+                            EventBus.getDefault().post(new MessageEvent(MessageCode.FACE_REGISTER_SUCCESS,accountString));
+                            finish();
                         }
 
                         @Override
@@ -690,7 +695,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
                             Intent intent=new Intent();
                             intent.putExtra(com.example.taobaou.utils.Constants.RETURN_MAIN_FROM_OTHER_DATA,compareResult.getUserName());
                             intent.putExtra(com.example.taobaou.utils.Constants.GO_TO_WHAT_FRAGMENT, com.example.taobaou.utils.Constants.GO_TO_MYINFO_FRAGMENT);
-                            EventBus.getDefault().post(new MessageEvent(MessageCode.FACEREGISTERSUCCESS,compareResult.getUserName()));
+                            EventBus.getDefault().post(new MessageEvent(MessageCode.FACE_RECOGNIZED_SUCCESS,compareResult.getUserName()));
 //                            MainActivity.startActivity(FaceRegisetrActivity.this,intent);
                             finish();
                             //todo:识别通过,去通知MyInfoFragment登录

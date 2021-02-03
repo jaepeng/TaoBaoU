@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 import com.example.baidusearch.utils.GsonUtils;
 import com.example.taobaou.base.BaseApplication;
-import com.example.taobaou.model.domain.UserInfo;
+import com.example.taobaou.model.domain.User;
 
 public class SharedPreferenceManager {
     private static SharedPreferenceManager instance = new SharedPreferenceManager();
@@ -41,21 +41,21 @@ public class SharedPreferenceManager {
 
     /**
      * 设置当前最后一个已登录用户是谁
-     * @param userInfo
+     * @param user
      */
 
-    public void setLastUser(UserInfo userInfo) {
-        String userInfoString = GsonUtils.toJson(userInfo);
+    public void setLastUser(User user) {
+        String userInfoString = GsonUtils.toJson(user);
         getSpEdit().putString(SpConstans.LAST_USER_ACCOUNT,userInfoString).apply();
     }
     /**
      * 获得当前最后一个已登录用户是谁
      * @param
      */
-    public UserInfo getLastUser() {
+    public User getLastUser() {
         String lastUserString = sp.getString(SpConstans.LAST_USER_ACCOUNT,"");
-        UserInfo userInfo = GsonUtils.fromJson(lastUserString, UserInfo.class);
-        return userInfo;
+        User user = GsonUtils.fromJson(lastUserString, User.class);
+        return user;
 
     }
     /**

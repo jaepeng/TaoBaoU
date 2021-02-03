@@ -9,7 +9,8 @@ public class MessageCode {
     public static final int REGISTERUSERACCOUNT=0x3;
 
     //人脸识别通过后返回登录
-    public static final int FACEREGISTERSUCCESS=0x11;
+    public static final int FACE_RECOGNIZED_SUCCESS =0x11;
+    public static final int FACE_REGISTER_SUCCESS =0x12;
 
 
 }

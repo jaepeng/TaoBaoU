@@ -1,7 +1,6 @@
 package com.example.taobaou.ui.activity;
 
 import android.Manifest;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,11 +13,10 @@ import com.arcsoft.face.ActiveFileInfo;
 import com.arcsoft.face.ErrorInfo;
 import com.arcsoft.face.FaceEngine;
 import com.arcsoft.face.enums.RuntimeABI;
-import com.example.facelibs.activity.RegisterAndRecognizeActivity;
 import com.example.facelibs.common.Constants;
 import com.example.taobaou.R;
 import com.example.taobaou.base.BaseActivity;
-import com.example.taobaou.model.domain.UserInfo;
+import com.example.taobaou.model.domain.User;
 import com.example.taobaou.utils.SharedPreferenceManager;
 
 import butterknife.BindView;
@@ -63,8 +61,25 @@ public class TestActivity extends BaseActivity {
 
     @OnClick(R.id.btn_test_sp)
     public void setData(){
-        Intent intent=new Intent(TestActivity.this, RegisterAndRecognizeActivity.class);
-        startActivity(intent);
+       new Thread(new Runnable() {
+           @Override
+           public void run() {
+//               OkHttpClient client = new OkHttpClient();
+//               MediaType mediaType=new MediaType();
+//               RequestBody requestBody=RequestBody.create()
+//               Request request = new Request.Builder().url("http://192.168.3.52:8080/login")
+//                       .post()
+//                       .build();
+//               try {
+//                   Response response = client.newCall(request).execute();//发送请求
+//                   String result = response.body().string();
+//                   Log.d(TAG, "result: "+result);
+//
+//               } catch (IOException e) {
+//                   e.printStackTrace();
+//               }
+           }
+       }).start();
 //        UserInfo userInfo=new UserInfo("1234");
 //        SharedPreferenceManager.getInstance().setLastUser(userInfo);
 //        boolean firstLogin = SharedPreferenceManager.getInstance().isFirstLogin();
@@ -72,7 +87,7 @@ public class TestActivity extends BaseActivity {
     @OnClick(R.id.btn_test_sp_get)
     public void getData(){
 
-        UserInfo lastUser = SharedPreferenceManager.getInstance().getLastUser();
+        User lastUser = SharedPreferenceManager.getInstance().getLastUser();
         tvShowMessage.setText(lastUser.toString());
     }
 
