@@ -31,7 +31,6 @@ public class OnSellPageAdapter extends RecyclerView.Adapter<OnSellPageAdapter.In
     @Override
     public OnSellPageAdapter.InnerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_on_sell_content, parent, false);
-
         return new InnerHolder(rootView);
     }
 

@@ -39,7 +39,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_myInfo_Image" />
     <TextView
-        android:visibility="gone"
+        android:visibility="visible"
         android:text="这是我的领券历史"
         android:textSize="18sp"
         android:background="@drawable/bg_my_card_search_history"

@@ -12,6 +12,8 @@ import com.example.taobaou.model.domain.TicketParams;
 import com.example.taobaou.model.domain.TicketResult;
 import com.example.taobaou.model.domain.User;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -55,11 +57,27 @@ public interface Api {
     Call<Boolean> addUser(@Body User user);
 
 
+    /**
+     * 登录判断
+     * @param useraccount
+     * @param password
+     * @return
+     */
     @FormUrlEncoded
     @POST("/firstdemo/login")
     Call<User> login(@Field("username") String useraccount,@Field("password") String password);
 
+    /**
+     *
+     * 添加领券记录
+     * @param ticketHistory
+     * @return
+     */
     @POST("/ticketHistory/add")
     Call<Boolean> addTicketHistory(@Body TicketHistory ticketHistory);
+
+
+    @GET("/ticketHistory/findAll?")
+    Call<List<TicketHistory>> findAllTicketHistory(@Query("username") String account);
 
 }
