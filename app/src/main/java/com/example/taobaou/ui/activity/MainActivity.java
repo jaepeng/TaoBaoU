@@ -31,7 +31,7 @@ import org.greenrobot.eventbus.EventBus;
 import butterknife.BindView;
 import butterknife.Unbinder;
 
-public class MainActivity extends BaseActivity implements IMainActivity{
+public class MainActivity extends BaseActivity implements IMainActivity {
 
 
     @BindView(R.id.main_navigation_bar)
@@ -43,7 +43,7 @@ public class MainActivity extends BaseActivity implements IMainActivity{
     private FragmentManager mFm;
     private Unbinder mbind;
     private MyInfoFragment mMyInfoFragment;
-    public static final String TAG="MainActivity";
+    public static final String TAG = "MainActivity";
     //人脸识别使用权限
     private static final String[] NEEDED_PERMISSIONS = new String[]{
             Manifest.permission.READ_PHONE_STATE
@@ -54,34 +54,35 @@ public class MainActivity extends BaseActivity implements IMainActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        Intent intent=getIntent();
+        Intent intent = getIntent();
         String account = intent.getStringExtra(Constants.RETURN_MAIN_FROM_OTHER_DATA);
         String whatfragment = intent.getStringExtra(Constants.GO_TO_WHAT_FRAGMENT);
-        Log.d(TAG, "jaeonStart: account"+account+" whatfragment:"+whatfragment);
-        if (!TextUtils.isEmpty(account)){
+        Log.d(TAG, "jaeonStart: account" + account + " whatfragment:" + whatfragment);
+        if (!TextUtils.isEmpty(account)) {
             //如果返回来的用户名不为空
-            EventBus.getDefault().postSticky(new MessageEvent(MessageCode.FACE_RECOGNIZED_SUCCESS,account));
+            EventBus.getDefault().postSticky(new MessageEvent(MessageCode.FACE_RECOGNIZED_SUCCESS, account));
         }
-        if (TextUtils.isEmpty(whatfragment)){
+        if (TextUtils.isEmpty(whatfragment)) {
             return;
-        }else{
-            if (whatfragment.equals(Constants.GO_TO_MYINFO_FRAGMENT)){
+        } else {
+            if (whatfragment.equals(Constants.GO_TO_MYINFO_FRAGMENT)) {
                 //跳转到我的信息界面
                 switchFragment(mMyInfoFragment);
             }
         }
     }
 
-    public static void startActivity(Context context, Intent saveIntent){
+    public static void startActivity(Context context, Intent saveIntent) {
 
-        Intent intent=new Intent(context,MainActivity.class);
+        Intent intent = new Intent(context, MainActivity.class);
         String whatFragmentString = saveIntent.getStringExtra(Constants.GO_TO_WHAT_FRAGMENT);
         String keydata = saveIntent.getStringExtra(Constants.RETURN_MAIN_FROM_OTHER_DATA);
-        Log.d(TAG, "startActivity: string"+whatFragmentString);
-        intent.putExtra(Constants.GO_TO_WHAT_FRAGMENT,whatFragmentString);
-        intent.putExtra(Constants.RETURN_MAIN_FROM_OTHER_DATA,keydata);
+        Log.d(TAG, "startActivity: string" + whatFragmentString);
+        intent.putExtra(Constants.GO_TO_WHAT_FRAGMENT, whatFragmentString);
+        intent.putExtra(Constants.RETURN_MAIN_FROM_OTHER_DATA, keydata);
         context.startActivity(intent);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,32 +138,33 @@ public class MainActivity extends BaseActivity implements IMainActivity{
         mNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-              //  LogUtils.d(MainActivity.class,"item.id:"+item.getItemId()+"  ,item.title:"+item.getTitle());
-                if (item.getItemId()==R.id.home){
-                    LogUtils.d(this,"首页");
+                //  LogUtils.d(MainActivity.class,"item.id:"+item.getItemId()+"  ,item.title:"+item.getTitle());
+                if (item.getItemId() == R.id.home) {
+                    LogUtils.d(this, "首页");
                     switchFragment(mHomeFragment);
 
-                }else if (item.getItemId()==R.id.selected) {
-                   LogUtils.i(this,"精选");
-                   switchFragment(mSelectedFragment);
-                }else if (item.getItemId()==R.id.search) {
-                    LogUtils.w(this,"搜索");
+                } else if (item.getItemId() == R.id.selected) {
+                    LogUtils.i(this, "精选");
+                    switchFragment(mSelectedFragment);
+                } else if (item.getItemId() == R.id.search) {
+                    LogUtils.w(this, "搜索");
                     switchFragment(mSearchFragment);
-                }else if(item.getItemId()==R.id.red_package){
-                    LogUtils.e(this,"特惠");
+                } else if (item.getItemId() == R.id.red_package) {
+                    LogUtils.e(this, "特惠");
                     switchFragment(mRedPackageFragment);
 
-                }else if (item.getItemId()==R.id.myinfo){
+                } else if (item.getItemId() == R.id.myinfo) {
                     switchFragment(mMyInfoFragment);
                 }
 
 
                 return true;//这里默认返回false,如果返回ture则表示消费该方法，那么图标才会开始变化
 
-                }
+            }
         });
     }
-//上一次显示的Fragment
+
+    //上一次显示的Fragment
     private BaseFragment lastoneFragment = null;
 
     private void switchFragment(BaseFragment targetFragment) {
@@ -176,7 +178,7 @@ public class MainActivity extends BaseActivity implements IMainActivity{
             fragmentTransaction.show(targetFragment);
 
         }
-        if (lastoneFragment != null&&targetFragment!=lastoneFragment) {
+        if (lastoneFragment != null && targetFragment != lastoneFragment) {
             fragmentTransaction.hide(lastoneFragment);
         }
         lastoneFragment = targetFragment;
@@ -187,7 +189,7 @@ public class MainActivity extends BaseActivity implements IMainActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mbind!=null) {
+        if (mbind != null) {
             mbind.unbind();
         }
     }
@@ -198,7 +200,7 @@ public class MainActivity extends BaseActivity implements IMainActivity{
      * 实现主界面点击搜索框能够跳到SearchFragmnet
      */
     @Override
-    public void switch2Serch(){
+    public void switch2Serch() {
 //        switchFragment(mSearchFragment);
         //切换下面的图标
         mNavigationView.setSelectedItemId(R.id.search);
@@ -207,9 +209,7 @@ public class MainActivity extends BaseActivity implements IMainActivity{
 
     @Override
     public void switch2Serch(String keyword) {
-        Log.d(TAG, "switch2Serch: before");
-        EventBus.getDefault().postSticky(new MessageEvent(MessageCode.ANALYSRESULTSEARCH,keyword));
-        Log.d(TAG, "switch2Serch: after");
+        EventBus.getDefault().postSticky(new MessageEvent(MessageCode.ANALYSRESULTSEARCH, keyword));
         mNavigationView.setSelectedItemId(R.id.search);
 
     }

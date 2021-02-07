@@ -136,7 +136,7 @@ public class MyInfoFragment extends BaseFragment {
         }
 
         if (messageEvent.getMessageCode()==MessageCode.REGISTERUSERACCOUNT){
-            //todo:注册成功返回
+            //注册成功返回
             loginHide(true);
             tv_username.setText(messageEvent.getMkeyword());
         }

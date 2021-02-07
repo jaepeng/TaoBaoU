@@ -58,7 +58,7 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
     @BindView(R.id.search_history_view)
     public TextFlowLayout mHistoriesView;
     @BindView(R.id.search_recommed_view)
-    public TextFlowLayout  mRecommendView;
+    public TextFlowLayout mRecommendView;
     @BindView(R.id.search_histories_container)
     public LinearLayout mSearchHistoryContainer;
     @BindView(R.id.serach_recommend_container)
@@ -75,10 +75,8 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
     public ImageView mSearchInputRemovelIv;
     @BindView(R.id.search_btn)
     public TextView mSearchBtn;
-    public static final String TAG="SearchFragmentjae";
-    public String templeKeyWord="";
-
-
+    public static final String TAG = "SearchFragmentjae";
+    public String templeKeyWord = "";
 
 
     private LinerItemContentAdapter mSearchResultAdapter;
@@ -87,7 +85,6 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate: 刚注册好!");
         EventBus.getDefault().register(this);
 
     }
@@ -99,27 +96,23 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
     }
 
 
-
     //处理EventBus传递来的数据
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onEvent(MessageEvent messageEvent) {
-        if (messageEvent.getMessageCode()== MessageCode.ANALYSRESULTSEARCH){
+        if (messageEvent.getMessageCode() == MessageCode.ANALYSRESULTSEARCH) {
             String keyword = messageEvent.getMkeyword();
-            Log.d("jae", "MessageFun keyword: "+keyword);
-            if (!TextUtils.isEmpty(keyword)){
-                Log.d(TAG, "onEvent: +设置mSearchInputEdt文字"+keyword);
-                if (!TextUtils.isEmpty(keyword)){
+            if (!TextUtils.isEmpty(keyword)) {
+                Log.d(TAG, "onEvent: +设置mSearchInputEdt文字" + keyword);
+                if (!TextUtils.isEmpty(keyword)) {
                     mSearchInputEdt.setText(keyword);
                     startSearch(keyword);
                 }
 
 
-
-            }else{
+            } else if (keyword.trim().length()==0){
                 Toast.makeText(getContext(), "没有识别出来,请手动搜索!", Toast.LENGTH_SHORT).show();
             }
         }
-
 
 
     }
@@ -128,6 +121,7 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
     protected int getRootViewResid() {
         return R.layout.fragment_serarch;
     }
+
     @Override
     protected void initView(View rootView) {
         setUpState(State.SUCCESS);
@@ -145,8 +139,8 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
         msearchResultList.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                outRect.top= SizeUtils.dip2px(getContext(),1.5f);
-                outRect.bottom=SizeUtils.dip2px(getContext(),1.5f);
+                outRect.top = SizeUtils.dip2px(getContext(), 1.5f);
+                outRect.bottom = SizeUtils.dip2px(getContext(), 1.5f);
             }
         });
 
@@ -155,7 +149,7 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
 
     @Override
     protected View loadRootView(LayoutInflater inflater, ViewGroup container) {
-        return inflater.inflate(R.layout.fragment_search_bar_layout,container,false);
+        return inflater.inflate(R.layout.fragment_search_bar_layout, container, false);
     }
 
     @Override
@@ -173,20 +167,17 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
                     if (mSearchPresenter != null) {
                         startSearch(mSearchInputEdt.getText().toString());
 //                        mSearchPresenter.doSearch(mSearchInputEdt.getText().toString());
-                        KeyboardUtils.hide(getContext(),v);
+                        KeyboardUtils.hide(getContext(), v);
                     }
 
-                }else{
+                } else {
                     //取消,拉起键盘
-                    KeyboardUtils.hide(getContext(),v);
+                    KeyboardUtils.hide(getContext(), v);
 
 
                 }
             }
         });
-
-
-
 
 
         /**
@@ -202,16 +193,13 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
         });
 
 
-
-
-
         /**
          * 监听输入框的内容变化
          */
         mSearchInputEdt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                LogUtils.d(this,"");
+                LogUtils.d(this, "");
             }
 
             @Override
@@ -219,8 +207,8 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
 //                LogUtils.d(SearchFragment.class,"s---->"+s+"    count ------->"+count+"    start ------->"+start+"    before ------->"+before);
                 //如果长度不为0,显示删除按钮,否则不显示
 
-                mSearchInputRemovelIv.setVisibility(hasInputContainSpace(true)?View.VISIBLE:View.GONE);//就算只空格也要显示出来
-               mSearchBtn.setText(hasInputContainSpace(false)?"搜索":"取消");//搜索的时候不能含有空格
+                mSearchInputRemovelIv.setVisibility(hasInputContainSpace(true) ? View.VISIBLE : View.GONE);//就算只空格也要显示出来
+                mSearchBtn.setText(hasInputContainSpace(false) ? "搜索" : "取消");//搜索的时候不能含有空格
 
 
             }
@@ -246,7 +234,7 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
         msearchRefreshContainer.setOnRefreshListener(new RefreshListenerAdapter() {
             @Override
             public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
-                if (mSearchPresenter!=null){
+                if (mSearchPresenter != null) {
                     mSearchPresenter.loaderMore();
                 }
             }
@@ -258,14 +246,14 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
         mSearchInputEdt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId== EditorInfo.IME_ACTION_SEARCH&&mSearchPresenter!=null){
+                if (actionId == EditorInfo.IME_ACTION_SEARCH && mSearchPresenter != null) {
                     //如果是搜索要求,则去请求数据
                     String inputKeyword = v.getText().toString();
-                    if (!TextUtils.isEmpty(inputKeyword)){
+                    if (!TextUtils.isEmpty(inputKeyword)) {
 
 //                        mSearchPresenter.doSearch(inputKeyword);
                         startSearch(inputKeyword);
-                    }else {
+                    } else {
                         return false;
                     }
 
@@ -282,14 +270,13 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
     private void switch2HistoryPage() {
 
 
-
         //切换到历史和推荐界面
-        if(mSearchPresenter!=null){
+        if (mSearchPresenter != null) {
             mSearchPresenter.getHistories();
         }
-        if (mRecommendView.getContentSize()!=0){
+        if (mRecommendView.getContentSize() != 0) {
             mSearchRecommendViewContainer.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             mSearchRecommendViewContainer.setVisibility(View.GONE);
 
         }
@@ -298,12 +285,12 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
 
     }
 
-    private boolean hasInputContainSpace(boolean containSpace){
-        if (containSpace){
+    private boolean hasInputContainSpace(boolean containSpace) {
+        if (containSpace) {
             return mSearchInputEdt.getText().toString().length() > 0;
 
-        }else{
-            return  mSearchInputEdt.getText().toString().trim().length() > 0;
+        } else {
+            return mSearchInputEdt.getText().toString().trim().length() > 0;
 
         }
     }
@@ -321,11 +308,11 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
     @Override
     public void onHistoriesLoad(Histories histories) {
         //历史记录数据从这里回来
-        LogUtils.d(this,"histories-------->"+histories);
-        if (histories==null||histories.getHistories().size()==0){
+        LogUtils.d(this, "histories-------->" + histories);
+        if (histories == null || histories.getHistories().size() == 0) {
             //没有历史记录
             mSearchHistoryContainer.setVisibility(View.GONE);
-        }else{
+        } else {
             //有历史记录
             mSearchHistoryContainer.setVisibility(View.VISIBLE);
             mHistoriesView.setTextList(histories.getHistories());
@@ -346,11 +333,11 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
 
     @Override
     public void onSearchLoadSuccess(SearchResult result) {
-        if (result!=null){
+        if (result != null) {
             setUpState(State.SUCCESS);
             msearchResultList.setVisibility(View.VISIBLE);
         }
-   //查找数据从这里回来
+        //查找数据从这里回来
 
 //        LogUtils.d(this,"result-------->"+result);
         //隐藏掉历史记录/推荐列表
@@ -365,10 +352,10 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
                     .getResult_list()
                     .getMap_data());
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             //切换到搜索内容为空
-            LogUtils.d(this,"//切换到搜索内容为空");
+            LogUtils.d(this, "//切换到搜索内容为空");
             setUpState(State.EMPTY);
 
 
@@ -396,6 +383,7 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
         msearchRefreshContainer.finishLoadmore();
         ToastUtsils.showToast("没有跟多数据了");
     }
+
     @Override
     public void onMoreLoaded(SearchResult moreresult) {
         msearchRefreshContainer.finishLoadmore();
@@ -403,22 +391,22 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
         //拿到结果,添加到适配器尾部
         List<SearchResult.DataBean.TbkDgMaterialOptionalResponseBean.ResultListBean.MapDataBean> moreData = moreresult.getData().getTbk_dg_material_optional_response().getResult_list().getMap_data();
         mSearchResultAdapter.addData(moreData);
-        ToastUtsils.showToast("加载新的"+moreData.size()+"数据");
+        ToastUtsils.showToast("加载新的" + moreData.size() + "数据");
 
     }
 
     @Override
     public void onRecommandWordsLoader(List<SearchRcommend.DataBean> recommendWords) {
         //推荐词的数据从这里回来
-        LogUtils.d(this,"recommendSize--------->"+recommendWords.size());
-        List<String> recommendTextS=new ArrayList<>();
+        LogUtils.d(this, "recommendSize--------->" + recommendWords.size());
+        List<String> recommendTextS = new ArrayList<>();
         for (SearchRcommend.DataBean recommendWord : recommendWords) {
             recommendTextS.add(recommendWord.getKeyword());
         }
-        if (recommendWords==null||recommendWords.size()==0){
+        if (recommendWords == null || recommendWords.size() == 0) {
             //如果没有推荐数据则将推荐界面隐藏
             mSearchRecommendViewContainer.setVisibility(View.GONE);
-        }else{
+        } else {
 
             mSearchRecommendViewContainer.setVisibility(View.VISIBLE);
         }
@@ -426,9 +414,7 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
         mRecommendView.setTextList(recommendTextS);
 
 
-
     }
-
 
 
     @Override
@@ -461,7 +447,7 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
     }
 
     private void startSearch(String text) {
-        if (mSearchPresenter!=null){
+        if (mSearchPresenter != null) {
             msearchResultList.scrollToPosition(0);
             mSearchPresenter.doSearch(text);
             mSearchInputEdt.setText(text);
@@ -473,9 +459,9 @@ public class SearchFragment extends BaseFragment implements ISearchPageCallBack,
 
     @Override
     public void onItemClickListener(IBaseInfo item) {
-        Log.d("jae_search", "onItemClickListener: "+item.getUrl().toString());
+        Log.d("jae_search", "onItemClickListener: " + item.getUrl().toString());
         //当列表内容被点击
-        TickUtils.toTicketPage(getContext(),item);
+        TickUtils.toTicketPage(getContext(), item);
     }
 
     @Override

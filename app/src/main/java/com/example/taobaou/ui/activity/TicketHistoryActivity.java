@@ -57,7 +57,6 @@ public class TicketHistoryActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //todo:请求数据,设置数据
         String account = SharedPreferenceManager.getInstance().getString(SpConstans.LAST_USER_ACCOUNT);
         Call<List<TicketHistory>> task = OtherRetrofitManager.getInstance().getApiService().findAllTicketHistory(account);
         task.enqueue(new Callback<List<TicketHistory>>() {

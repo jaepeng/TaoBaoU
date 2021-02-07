@@ -3,7 +3,6 @@ package com.example.taobaou.ui.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,12 +50,11 @@ public class HomeContentFragment extends BaseFragment implements IHomeCallback, 
     public ViewPager homePager;
     private HomePagerAdapter mHomePagerAdapter;
     private String mKeyWord;
-    private Handler mHandler=new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
-            if (msg.what==1){
-                Log.d("jae_keyword", "要走了！ mKeyWord"+mKeyWord);
+            if (msg.what == 1) {
                 FragmentActivity activity = getActivity();
                 setUpState(State.SUCCESS);
                 if (activity instanceof IMainActivity) {
@@ -80,10 +78,10 @@ public class HomeContentFragment extends BaseFragment implements IHomeCallback, 
         mSearchInputBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 //跳转到SearchFragment
+                //跳转到SearchFragment
                 FragmentActivity activity = getActivity();
-                if (activity instanceof IMainActivity){
-                    ((IMainActivity)activity).switch2Serch();
+                if (activity instanceof IMainActivity) {
+                    ((IMainActivity) activity).switch2Serch();
                 }
             }
         });
@@ -95,14 +93,14 @@ public class HomeContentFragment extends BaseFragment implements IHomeCallback, 
     protected void onRetryClick() {
         //网络错误被点击重试
         //重新加载分类
-        if (mHomePresent!=null) {
+        if (mHomePresent != null) {
             mHomePresent.getCategories();
         }
     }
 
     @Override
     protected View loadRootView(LayoutInflater inflater, ViewGroup container) {
-        return inflater.inflate(R.layout.base_home_fragment_layout,container,false);
+        return inflater.inflate(R.layout.base_home_fragment_layout, container, false);
     }
 
     @Override
@@ -117,7 +115,7 @@ public class HomeContentFragment extends BaseFragment implements IHomeCallback, 
     public void onCategoriesLoaded(Categories categories) {
         setUpState(State.SUCCESS);
         //加载的数据就会从这里回来
-        if (categories!=null) {
+        if (categories != null) {
 //            homePager.setOffscreenPageLimit(categories.getData().size());
             mHomePagerAdapter.setCategories(categories);
         }
@@ -142,7 +140,7 @@ public class HomeContentFragment extends BaseFragment implements IHomeCallback, 
     @Override
     protected void releas() {
         //取消注册
-        if (mHomePagerAdapter!=null) {
+        if (mHomePagerAdapter != null) {
             mHomePresent.unregisterViewCallback(this);
         }
     }
@@ -161,13 +159,13 @@ public class HomeContentFragment extends BaseFragment implements IHomeCallback, 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        LogUtils.d(this,"on create view....");
+        LogUtils.d(this, "on create view....");
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public void onDestroy() {
-        LogUtils.d(this,"on destoryVIew..");
+        LogUtils.d(this, "on destoryVIew..");
         super.onDestroy();
 
     }
@@ -177,23 +175,21 @@ public class HomeContentFragment extends BaseFragment implements IHomeCallback, 
         //在数据返回前进入loding状态
         setUpState(State.LOADING);
         //点击了拍照按钮，需要拿到数据后进行跳转。
-        EasyPhotos.createAlbum(this,true, GlideEngine.getInstance()).start(new SelectCallback() {
+        EasyPhotos.createAlbum(this, true, GlideEngine.getInstance()).start(new SelectCallback() {
             @Override
             public void onResult(ArrayList<Photo> photos, ArrayList<String> paths, boolean isOriginal) {
 
-               new Thread(new Runnable() {
-                   @Override
-                   public void run() {
-                       String s = AdvancedGeneral.advancedGeneral(paths.get(0),getContext());
-                       AnalysisResult analysisResult=new AnalysisResult(s);
-                       mKeyWord= analysisResult.getKeyWord();
-                       Log.d("jae_key", "run: "+mKeyWord);
-                       Message message=mHandler.obtainMessage();
-                       message.what=1;
-                       mHandler.sendMessage(message);
-                   }
-               }).start();
-
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String s = AdvancedGeneral.advancedGeneral(paths.get(0), getContext());
+                        AnalysisResult analysisResult = new AnalysisResult(s);
+                        mKeyWord = analysisResult.getKeyWord();
+                        Message message = mHandler.obtainMessage();
+                        message.what = 1;
+                        mHandler.sendMessage(message);
+                    }
+                }).start();
 
 
             }
