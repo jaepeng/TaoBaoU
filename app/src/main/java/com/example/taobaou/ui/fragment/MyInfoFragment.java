@@ -58,6 +58,8 @@ public class MyInfoFragment extends BaseFragment {
     Button btnRegister;
     @BindView(R.id.btn_myinfo_unregister)
     Button btnUnRegister;
+    @BindView(R.id.tv_myInfo_change_pwd)
+    TextView tvChangePwd;
     private String mLastUserAccount;
     public static final String TAG="MyInfoFragment";
 
@@ -196,13 +198,13 @@ public class MyInfoFragment extends BaseFragment {
 
         if (isLogin){
             //登录状态
-            showViwe(iv_myImage,tv_username,tv_couponHistory,btnUnRegister);
+            showViwe(iv_myImage,tv_username,tv_couponHistory,btnUnRegister,tvChangePwd);
             hideView(btnLogin,btnRegister);
 
         }else{
             //未登录状态
             showViwe(btnLogin,btnRegister);
-            hideView(iv_myImage,tv_username,tv_couponHistory,btnUnRegister);
+            hideView(iv_myImage,tv_username,tv_couponHistory,btnUnRegister,tvChangePwd);
 
         }
 

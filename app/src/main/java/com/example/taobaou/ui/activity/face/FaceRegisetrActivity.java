@@ -17,7 +17,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -545,12 +544,10 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
 
                         @Override
                         public void onNext(Boolean success) {
-                            //todo:人脸注册成功
                             String result = success ? "register success!" : "register failed!";
                             ToastUtsils.showToast(result);
                             Log.d(TAG, "onNext: 人脸注册成功");
                             registerStatus = REGISTER_STATUS_DONE;
-                            
                             EventBus.getDefault().post(new MessageEvent(MessageCode.FACE_REGISTER_SUCCESS, accountString));
                             finish();
                         }
@@ -703,7 +700,6 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
                             requestFeatureStatusMap.put(requestId, RequestFeatureStatus.SUCCEED);
                             faceHelper.setName(requestId, getString(com.arcsoft.arcfacedemo.R.string.recognize_success_notice, compareResult.getUserName()));
                             mBtnRegister.setClickable(false);
-                            Toast.makeText(FaceRegisetrActivity.this, "识别通过啦!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent();
                             intent.putExtra(com.example.taobaou.utils.Constants.RETURN_MAIN_FROM_OTHER_DATA, compareResult.getUserName());
                             intent.putExtra(com.example.taobaou.utils.Constants.GO_TO_WHAT_FRAGMENT, com.example.taobaou.utils.Constants.GO_TO_MYINFO_FRAGMENT);

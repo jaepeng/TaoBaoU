@@ -41,6 +41,7 @@ public class FaceServer {
     private static FaceServer faceServer = null;
     //todo:人脸信息存储
     private static List<FaceRegisterInfo> faceRegisterInfoList;
+    Api apiService;
     public static String ROOT_PATH;
     /**
      * 存放注册图的目录
@@ -74,6 +75,7 @@ public class FaceServer {
      * @return 是否初始化成功
      */
     public boolean init(Context context) {
+        apiService= OtherRetrofitManager.getInstance().getApiService();
         synchronized (this) {
             if (faceEngine == null && context != null) {
                 faceEngine = new FaceEngine();
@@ -125,6 +127,7 @@ public class FaceServer {
             if (featureFiles == null || featureFiles.length == 0) {
                 return;
             }
+            //todo:添加人脸数据，替换成数据库数据
             faceRegisterInfoList = new ArrayList<>();
             for (File featureFile : featureFiles) {
                 try {
@@ -132,7 +135,26 @@ public class FaceServer {
                     byte[] feature = new byte[FaceFeature.FEATURE_SIZE];
                     fis.read(feature);
                     fis.close();
-                    //todo:添加人脸数据
+                    Call<Boolean> task = apiService.addRegisterFace(new FaceRegisterInfo(feature, featureFile.getName()));
+                    task.enqueue(new Callback<Boolean>() {
+                        @Override
+                        public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                            if (response.code()==200){
+                                if (response.body().booleanValue()) {
+                                    Log.d(TAG, "onResponse: 添加人脸成功");
+                                }else{
+                                    Log.d(TAG, "onResponse: 添加人脸失败");
+                                }
+                            }else{
+                                Log.d(TAG, "onResponse: 请求错误");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Boolean> call, Throwable t) {
+
+                        }
+                    });
 
                     faceRegisterInfoList.add(new FaceRegisterInfo(feature, featureFile.getName()));
                 } catch (IOException e) {
@@ -283,7 +305,7 @@ public class FaceServer {
                     }
                     //todo:注册成功添加人脸数据
                     Log.d(TAG, "registerNv21: 去注册!!");
-                    Api apiService = OtherRetrofitManager.getInstance().getApiService();
+
                     Call<Boolean> task = apiService.addRegisterFace(new FaceRegisterInfo(faceFeature.getFeatureData(), userName));
                     task.enqueue(new Callback<Boolean>() {
                         @Override

@@ -88,6 +88,10 @@ public interface Api {
     @GET("/ticketHistory/findAll?")
     Call<List<TicketHistory>> findAllTicketHistory(@Query("username") String account);
 
+    /**
+     * 活动所有注册用户名
+     * @return
+     */
     @GET("/firstdemo/getAllName")
     Call<List<String>> getAllUserName();
 

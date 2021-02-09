@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <FrameLayout
         android:id="@+id/base_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
     </FrameLayout>
+
     <ImageView
         android:scaleType="fitXY"
         android:id="@+id/iv_myInfo_Image"
@@ -58,26 +65,41 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_height="wrap_content"/>
-    <Button
-        android:id="@+id/btn_myinfo_unregister"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_my_info_btn_login"
-        android:text="点我退出！"
+    <TextView
+        android:visibility="visible"
+        android:text="点我修改密码"
+        android:textSize="18sp"
+        android:background="@drawable/bg_my_card_change_psd"
+        android:id="@+id/tv_myInfo_change_pwd"
+        app:layout_constraintTop_toBottomOf="@id/tv_myInfo_coupon_history"
         android:layout_width="match_parent"
         android:gravity="center"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:layout_marginTop="20dp"
         android:paddingTop="5dp"
-        android:textSize="20sp"
         android:paddingBottom="5dp"
         android:textColor="@color/white"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_myInfo_coupon_history" />
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btn_myinfo_unregister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/bg_my_info_btn_login"
+        android:gravity="center"
+        android:layout_marginBottom="20dp"
+        android:text="点我退出！"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btn_myinfo_login"
