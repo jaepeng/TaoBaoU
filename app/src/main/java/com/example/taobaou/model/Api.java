@@ -12,8 +12,6 @@ import com.example.taobaou.model.domain.TicketParams;
 import com.example.taobaou.model.domain.TicketResult;
 import com.example.taobaou.model.domain.User;
 
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;

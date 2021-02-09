@@ -75,10 +75,9 @@
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
 
-        app:layout_constraintBottom_toBottomOf="@+id/btn_myinfo_login"
-        app:layout_constraintTop_toTopOf="@+id/tv_myInfo_userName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_myInfo_coupon_history" />
 
     <Button
         android:id="@+id/btn_myinfo_login"
