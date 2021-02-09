@@ -77,6 +77,11 @@ public interface Api {
     Call<Boolean> addTicketHistory(@Body TicketHistory ticketHistory);
 
 
+    /**
+     * 查找所有了记录数据
+     * @param account
+     * @return
+     */
     @GET("/ticketHistory/findAll?")
     Call<List<TicketHistory>> findAllTicketHistory(@Query("username") String account);
 

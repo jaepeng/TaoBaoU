@@ -133,22 +133,25 @@ public class MyInfoFragment extends BaseFragment {
             //进入登录状态
             loginHide(true);
             tv_username.setText(messageEvent.getMkeyword());
+            SharedPreferenceManager.getInstance().putValue(SpConstans.LAST_USER_ACCOUNT,messageEvent.getMkeyword());
         }
 
         if (messageEvent.getMessageCode()==MessageCode.REGISTERUSERACCOUNT){
             //注册成功返回
             loginHide(true);
             tv_username.setText(messageEvent.getMkeyword());
+            SharedPreferenceManager.getInstance().putValue(SpConstans.LAST_USER_ACCOUNT,messageEvent.getMkeyword());
         }
         if (messageEvent.getMessageCode()==MessageCode.FACE_RECOGNIZED_SUCCESS){
             //人脸识别成功
-            Log.d("jae", "Register success onEvent: "+messageEvent.getMkeyword());
+            Log.d("jae", "Register : "+messageEvent.getMkeyword());
             loginHide(true);
+            SharedPreferenceManager.getInstance().putValue(SpConstans.LAST_USER_ACCOUNT,messageEvent.getMkeyword());
             tv_username.setText(messageEvent.getMkeyword());
         }
         if (messageEvent.getMessageCode()==MessageCode.FACE_REGISTER_SUCCESS){
             //人脸注册成功
-            Log.d("jae", "onEvent: 人脸注册成功");
+            Log.d("", "onEvent: 人脸注册成功");
         }
 
 

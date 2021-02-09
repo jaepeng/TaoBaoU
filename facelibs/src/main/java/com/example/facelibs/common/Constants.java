@@ -16,5 +16,9 @@ public class Constants {
 
 
     public static final String  FACE_REGISTER_ACCOUNT="face_register_account";
+
+
+
+    public static final String OTHER_BASE_URL ="http://192.168.1.5:8080";
 }
 

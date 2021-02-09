@@ -16,6 +16,8 @@ import com.arcsoft.imageutil.ArcSoftImageFormat;
 import com.arcsoft.imageutil.ArcSoftImageUtil;
 import com.arcsoft.imageutil.ArcSoftImageUtilError;
 import com.arcsoft.imageutil.ArcSoftRotateDegree;
+import com.example.facelibs.http.Api;
+import com.example.facelibs.http.OtherRetrofitManager;
 import com.example.facelibs.model.FaceRegisterInfo;
 
 import java.io.File;
@@ -24,6 +26,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 人脸库操作类，包含注册和搜索
@@ -127,6 +133,7 @@ public class FaceServer {
                     fis.read(feature);
                     fis.close();
                     //todo:添加人脸数据
+
                     faceRegisterInfoList.add(new FaceRegisterInfo(feature, featureFile.getName()));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -275,6 +282,27 @@ public class FaceServer {
                         faceRegisterInfoList = new ArrayList<>();
                     }
                     //todo:注册成功添加人脸数据
+                    Log.d(TAG, "registerNv21: 去注册!!");
+                    Api apiService = OtherRetrofitManager.getInstance().getApiService();
+                    Call<Boolean> task = apiService.addRegisterFace(new FaceRegisterInfo(faceFeature.getFeatureData(), userName));
+                    task.enqueue(new Callback<Boolean>() {
+                        @Override
+                        public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                            Log.d(TAG, "onResponse: response.code"+response.code());
+                            Log.d(TAG, "onResponse: response.body"+response.body());
+                            if (response.code()==200){
+                                if (response.body()==true){
+                                    Log.d(TAG, "onResponse: 添加成功");
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Boolean> call, Throwable t) {
+
+                        }
+                    });
+
                     faceRegisterInfoList.add(new FaceRegisterInfo(faceFeature.getFeatureData(), userName));
                     return true;
                 } catch (IOException e) {

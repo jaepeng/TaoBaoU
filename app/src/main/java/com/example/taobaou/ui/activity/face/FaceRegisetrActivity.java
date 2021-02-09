@@ -208,7 +208,8 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
 
         // Activity启动后就锁定为启动时的方向
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
-       //清除本地人脸数据
+       //todo:清除本地人脸数据
+
 //        FaceServer.getInstance().clearAllFaces(this);
         //本地人脸库初始化
         FaceServer.getInstance().init(this);
