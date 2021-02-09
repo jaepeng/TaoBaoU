@@ -55,10 +55,21 @@ public interface Api {
     Call<Boolean> addUser(@Body User user);
 
 
+    /**
+     * 用户登录
+     * @param useraccount
+     * @param password
+     * @return
+     */
     @FormUrlEncoded
     @POST("/firstdemo/login")
     Call<User> login(@Field("username") String useraccount,@Field("password") String password);
 
+    /**
+     * 添加历史记录
+     * @param ticketHistory
+     * @return
+     */
     @POST("/ticketHistory/add")
     Call<Boolean> addTicketHistory(@Body TicketHistory ticketHistory);
 

@@ -30,7 +30,7 @@ public class TicketHisotryAdapter extends RecyclerView.Adapter<TicketHisotryAdap
     @Override
     public InnerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         mItemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_ticket_history, parent, false);
-        return null;
+        return new InnerHolder(mItemView);
     }
 
     @Override
@@ -66,6 +66,9 @@ public class TicketHisotryAdapter extends RecyclerView.Adapter<TicketHisotryAdap
     }
     public void setData(LinkedHashMap<String,String> map){
 
+        if (map==null||map.size()==0){
+            return;
+        }
         urls = (String[]) map.keySet().toArray();
         codes = (String[]) map.values().toArray();
 

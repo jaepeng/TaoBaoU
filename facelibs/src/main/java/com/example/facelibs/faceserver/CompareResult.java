@@ -7,6 +7,15 @@ public class CompareResult {
     private float similar;
     private int trackId;
 
+    @Override
+    public String toString() {
+        return "CompareResult{" +
+                "userName='" + userName + '\'' +
+                ", similar=" + similar +
+                ", trackId=" + trackId +
+                '}';
+    }
+
     public CompareResult(String userName, float similar) {
         this.userName = userName;
         this.similar = similar;

@@ -126,6 +126,7 @@ public class FaceServer {
                     byte[] feature = new byte[FaceFeature.FEATURE_SIZE];
                     fis.read(feature);
                     fis.close();
+                    //todo:添加人脸数据
                     faceRegisterInfoList.add(new FaceRegisterInfo(feature, featureFile.getName()));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -273,6 +274,7 @@ public class FaceServer {
                     if (faceRegisterInfoList == null) {
                         faceRegisterInfoList = new ArrayList<>();
                     }
+                    //todo:注册成功添加人脸数据
                     faceRegisterInfoList.add(new FaceRegisterInfo(faceFeature.getFeatureData(), userName));
                     return true;
                 } catch (IOException e) {

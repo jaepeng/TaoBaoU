@@ -20,6 +20,7 @@ import com.example.taobaou.model.message.MessageCode;
 import com.example.taobaou.model.message.MessageEvent;
 import com.example.taobaou.ui.activity.LoginActivity;
 import com.example.taobaou.ui.activity.RegisterActivity;
+import com.example.taobaou.ui.activity.TicketHistoryActivity;
 import com.example.taobaou.utils.SharedPreferenceManager;
 import com.example.taobaou.utils.SpConstans;
 import com.example.taobaou.utils.engine.GlideEngine;
@@ -122,7 +123,7 @@ public class MyInfoFragment extends BaseFragment {
     }
 
     private void goHistory() {
-//        startActivity(new Intent(getActivity(), TicketHistoryActivity.class));
+        startActivity(new Intent(getActivity(), TicketHistoryActivity.class));
     }
 
     //处理EventBus传递来的数据

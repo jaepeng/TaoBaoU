@@ -121,6 +121,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
     private FaceSearchResultAdapter adapter;
     /**
      * 活体检测的开关
+     * //默认开启活体检测
      */
     private boolean livenessDetect = true;
     /**
@@ -207,8 +208,9 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
 
         // Activity启动后就锁定为启动时的方向
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
-        //本地人脸库初始化
+       //清除本地人脸数据
 //        FaceServer.getInstance().clearAllFaces(this);
+        //本地人脸库初始化
         FaceServer.getInstance().init(this);
 
 
@@ -293,6 +295,10 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
             }
         }
     }
+
+    /**
+     * 相机初始化
+     */
     private void initCamera() {
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -642,7 +648,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
                     public void subscribe(ObservableEmitter<CompareResult> emitter) {
 //                        Log.i(TAG, "subscribe: fr search start = " + System.currentTimeMillis() + " trackId = " + requestId);
                         CompareResult compareResult = FaceServer.getInstance().getTopOfFaceLib(frFace);
-//                        Log.i(TAG, "subscribe: fr search end = " + System.currentTimeMillis() + " trackId = " + requestId);
+                        Log.d(TAG+"jae", "subscribe: ComparResult:"+compareResult.toString());
                         emitter.onNext(compareResult);
 
                     }
