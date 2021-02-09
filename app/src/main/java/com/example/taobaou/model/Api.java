@@ -67,6 +67,9 @@ public interface Api {
     @POST("/firstdemo/login")
     Call<User> login(@Field("username") String useraccount,@Field("password") String password);
 
+    @GET("/firstdemo/findByName")
+    Call<User> findUserByName(@Query("username")String useraccont);
+
     /**
      *
      * 添加领券记录

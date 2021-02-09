@@ -19,6 +19,7 @@ import com.arcsoft.face.ActiveFileInfo;
 import com.arcsoft.face.ErrorInfo;
 import com.arcsoft.face.FaceEngine;
 import com.arcsoft.face.enums.RuntimeABI;
+import com.blankj.utilcode.util.ToastUtils;
 import com.example.taobaou.R;
 import com.example.taobaou.model.Api;
 import com.example.taobaou.model.domain.User;
@@ -60,7 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText mEdtPassword;
     private EditText mEdtRePassword;
     private Map<String, String> mUsermap;
-    public static final String TAG="MainActivity";
+    public static final String TAG="RegisterActivity";
     private Api mApi;
     //人脸识别使用权限
     private static final String[] NEEDED_PERMISSIONS = new String[]{
@@ -68,6 +69,7 @@ public class RegisterActivity extends AppCompatActivity {
     };
     boolean libraryExists = true;
     private static final int ACTION_REQUEST_PERMISSIONS = 0x001;
+    private boolean accountCanPass= true;
 
 
     @Override
@@ -131,7 +133,6 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String account = mEdtAccount.getText().toString();
                 if (checkUserAccount(account)){
-
                     FaceRegisetrActivity.startActivity(RegisterActivity.this,account);
                     finish();
                 }
@@ -234,18 +235,33 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean checkUserAccount(String registeraccount) {
         if (TextUtils.isEmpty(registeraccount)){
             ToastUtsils.showToast("用户名不能为空");
-            return false;
-        }
-        if (registeraccount.length()<3){
+            accountCanPass=false;
+        }else if (registeraccount.length()<3){
             ToastUtsils.showToast("账户长度不允许小于3");
-            return false;
+            accountCanPass=false;
         }
-        if (getMap(this).containsKey(registeraccount)){
-            ToastUtsils.showToast("该账户已经被注册了!");
-            return false;
-        }
+        Call<User> task = mApi.findUserByName(registeraccount);
+        task.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                Log.d(TAG, "onResponse: response.code"+ response.code());
+                Log.d(TAG, "onResponse: response.body"+ response.body());
+                if (response.code()==200){
+                    if (response.body()!=null){
+                        ToastUtils.showShort("账户已被注册");
+                        accountCanPass=false;
+                    }
+                }
+            }
 
-        return true;
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+        });
+
+
+        return accountCanPass;
     }
 
     public static void setMap(Context context, Map<String, String> map) {

@@ -13,14 +13,18 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.example.taobaou.R;
 import com.example.taobaou.base.BaseFragment;
+import com.example.taobaou.model.Api;
+import com.example.taobaou.model.domain.User;
 import com.example.taobaou.model.message.MessageCode;
 import com.example.taobaou.model.message.MessageEvent;
 import com.example.taobaou.ui.activity.LoginActivity;
 import com.example.taobaou.ui.activity.RegisterActivity;
 import com.example.taobaou.ui.activity.TicketHistoryActivity;
+import com.example.taobaou.utils.OtherRetrofitManager;
 import com.example.taobaou.utils.SharedPreferenceManager;
 import com.example.taobaou.utils.SpConstans;
 import com.example.taobaou.utils.engine.GlideEngine;
@@ -35,6 +39,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MyInfoFragment extends BaseFragment {
     @BindView(R.id.iv_myInfo_Image)
@@ -52,6 +59,7 @@ public class MyInfoFragment extends BaseFragment {
     @BindView(R.id.btn_myinfo_unregister)
     Button btnUnRegister;
     private String mLastUserAccount;
+    public static final String TAG="MyInfoFragment";
 
     @Override
     protected int getRootViewResid() {
@@ -143,7 +151,7 @@ public class MyInfoFragment extends BaseFragment {
             SharedPreferenceManager.getInstance().putValue(SpConstans.LAST_USER_ACCOUNT,messageEvent.getMkeyword());
         }
         if (messageEvent.getMessageCode()==MessageCode.FACE_RECOGNIZED_SUCCESS){
-            //人脸识别成功
+            //todo:如果是人脸注册，则是先注册，让后再识别，人脸识别成功再走这条路
             Log.d("jae", "Register : "+messageEvent.getMkeyword());
             loginHide(true);
             SharedPreferenceManager.getInstance().putValue(SpConstans.LAST_USER_ACCOUNT,messageEvent.getMkeyword());
@@ -151,7 +159,23 @@ public class MyInfoFragment extends BaseFragment {
         }
         if (messageEvent.getMessageCode()==MessageCode.FACE_REGISTER_SUCCESS){
             //人脸注册成功
-            Log.d("", "onEvent: 人脸注册成功");
+            Api api  = OtherRetrofitManager.getInstance().getApiService();
+            Call<Boolean> task = api.addUser(new User(messageEvent.getMkeyword(), messageEvent.getMkeyword()));
+            task.enqueue(new Callback<Boolean>() {
+                @Override
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    Log.d(TAG, "onResponse: response.body"+response.body());
+                    Log.d(TAG, "onResponse: response.body"+response.code());
+                    if (response.code()==200){
+                        ToastUtils.showShort("人脸注册成功");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Boolean> call, Throwable t) {
+
+                }
+            });
         }
 
 

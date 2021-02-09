@@ -183,11 +183,11 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
     };
     private Button mBtnRegister;
     //用来判断是拿来注册还是登录
-    private boolean isRegister=true;
+    private boolean isRegister = true;
 
-    public static void  startActivity(Context context, String string){
-        Intent intent=new Intent(context, FaceRegisetrActivity.class);
-        intent.putExtra(Constants.FACE_REGISTER_ACCOUNT,string);
+    public static void startActivity(Context context, String string) {
+        Intent intent = new Intent(context, FaceRegisetrActivity.class);
+        intent.putExtra(Constants.FACE_REGISTER_ACCOUNT, string);
         context.startActivity(intent);
 
     }
@@ -208,9 +208,9 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
 
         // Activity启动后就锁定为启动时的方向
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
-       //todo:清除本地人脸数据
+        //todo:清除本地人脸数据
 
-//        FaceServer.getInstance().clearAllFaces(this);
+        FaceServer.getInstance().clearAllFaces(this);
         //本地人脸库初始化
         FaceServer.getInstance().init(this);
 
@@ -242,6 +242,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
         recyclerShowFaceInfo.setLayoutManager(new GridLayoutManager(this, spanCount));
         recyclerShowFaceInfo.setItemAnimator(new DefaultItemAnimator());
     }
+
     private void initEngine() {
         ftEngine = new FaceEngine();
         ftInitCode = ftEngine.init(this, DetectMode.ASF_DETECT_MODE_VIDEO, ConfigUtil.getFtOrient(this),
@@ -273,6 +274,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
             ToastUtsils.showToast(error);
         }
     }
+
     /**
      * 销毁引擎，faceHelper中可能会有特征提取耗时操作仍在执行，加锁防止crash
      */
@@ -517,7 +519,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
 
     private void registerFace(final byte[] nv21, final List<FacePreviewInfo> facePreviewInfoList) {
         //获得传入的用户名
-        Intent intent=getIntent();
+        Intent intent = getIntent();
         String accountString = intent.getStringExtra(Constants.FACE_REGISTER_ACCOUNT);
 
         if (registerStatus == REGISTER_STATUS_READY && facePreviewInfoList != null && facePreviewInfoList.size() > 0) {
@@ -529,7 +531,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
 
                     //之后识别通过了就会显示这个名字
                     boolean success = FaceServer.getInstance().registerNv21(FaceRegisetrActivity.this, nv21.clone(), previewSize.width, previewSize.height,
-                            facePreviewInfoList.get(0).getFaceInfo(), accountString+" "/*faceHelper.getTrackedFaceCount()*/);
+                            facePreviewInfoList.get(0).getFaceInfo(), accountString + " "/*faceHelper.getTrackedFaceCount()*/);
                     emitter.onNext(success);
                 }
             })
@@ -543,11 +545,13 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
 
                         @Override
                         public void onNext(Boolean success) {
-                            //todo:注册成功
+                            //todo:人脸注册成功
                             String result = success ? "register success!" : "register failed!";
                             ToastUtsils.showToast(result);
+                            Log.d(TAG, "onNext: 人脸注册成功");
                             registerStatus = REGISTER_STATUS_DONE;
-                            EventBus.getDefault().post(new MessageEvent(MessageCode.FACE_REGISTER_SUCCESS,accountString));
+                            
+                            EventBus.getDefault().post(new MessageEvent(MessageCode.FACE_REGISTER_SUCCESS, accountString));
                             finish();
                         }
 
@@ -565,7 +569,6 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
                     });
         }
     }
-
 
 
     private void drawPreviewInfo(List<FacePreviewInfo> facePreviewInfoList) {
@@ -592,10 +595,11 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
             //todo：这里设置注册名字,登录过后,默认用户账户就是注册名字+id
             drawInfoList.add(new DrawInfo(drawHelper.adjustRect(facePreviewInfoList.get(i).getFaceInfo().getRect()),
                     GenderInfo.UNKNOWN, AgeInfo.UNKNOWN_AGE, liveness == null ? LivenessInfo.UNKNOWN : liveness, color,
-                    name == null ? String.valueOf("你是第几个"+facePreviewInfoList.get(i).getTrackId()) : name));
+                    name == null ? String.valueOf("你是第几个" + facePreviewInfoList.get(i).getTrackId()) : name));
         }
         drawHelper.draw(faceRectView, drawInfoList);
     }
+
     private void clearLeftFace(List<FacePreviewInfo> facePreviewInfoList) {
         if (compareResultList != null) {
             for (int i = compareResultList.size() - 1; i >= 0; i--) {
@@ -638,6 +642,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
 
     /**
      * 人脸比对
+     *
      * @param frFace
      * @param requestId
      */
@@ -649,7 +654,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
                     public void subscribe(ObservableEmitter<CompareResult> emitter) {
 //                        Log.i(TAG, "subscribe: fr search start = " + System.currentTimeMillis() + " trackId = " + requestId);
                         CompareResult compareResult = FaceServer.getInstance().getTopOfFaceLib(frFace);
-                        Log.d(TAG+"jae", "subscribe: ComparResult:"+compareResult.toString());
+                        Log.d(TAG + "jae", "subscribe: ComparResult:" + compareResult.toString());
                         emitter.onNext(compareResult);
 
                     }
@@ -699,14 +704,15 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
                             faceHelper.setName(requestId, getString(com.arcsoft.arcfacedemo.R.string.recognize_success_notice, compareResult.getUserName()));
                             mBtnRegister.setClickable(false);
                             Toast.makeText(FaceRegisetrActivity.this, "识别通过啦!", Toast.LENGTH_SHORT).show();
-                            Intent intent=new Intent();
-                            intent.putExtra(com.example.taobaou.utils.Constants.RETURN_MAIN_FROM_OTHER_DATA,compareResult.getUserName());
+                            Intent intent = new Intent();
+                            intent.putExtra(com.example.taobaou.utils.Constants.RETURN_MAIN_FROM_OTHER_DATA, compareResult.getUserName());
                             intent.putExtra(com.example.taobaou.utils.Constants.GO_TO_WHAT_FRAGMENT, com.example.taobaou.utils.Constants.GO_TO_MYINFO_FRAGMENT);
-                            EventBus.getDefault().post(new MessageEvent(MessageCode.FACE_RECOGNIZED_SUCCESS,compareResult.getUserName()));
+                            EventBus.getDefault().post(new MessageEvent(MessageCode.FACE_RECOGNIZED_SUCCESS, compareResult.getUserName()));
 //                            MainActivity.startActivity(FaceRegisetrActivity.this,intent);
-                            finish();
                             //todo:识别通过,去通知MyInfoFragment登录
                             Log.d(TAG, "onNext: 识别通过！！");
+                            finish();
+                            
 
                         } else {
 
@@ -770,6 +776,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
             initCamera();
         }
     }
+
     protected boolean checkPermissions(String[] neededPermissions) {
         if (neededPermissions == null || neededPermissions.length == 0) {
             return true;
@@ -796,16 +803,18 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
         }
         afterRequestPermission(requestCode, isAllGranted);
     }
+
     void afterRequestPermission(int requestCode, boolean isAllGranted) {
         if (requestCode == ACTION_REQUEST_PERMISSIONS) {
             if (isAllGranted) {
                 initEngine();
                 initCamera();
             } else {
-                ToastUtsils.showToast(getString( com.arcsoft.arcfacedemo.R.string.permission_denied));
+                ToastUtsils.showToast(getString(com.arcsoft.arcfacedemo.R.string.permission_denied));
             }
         }
     }
+
     public int increaseAndGetValue(Map<Integer, Integer> countMap, int key) {
         if (countMap == null) {
             return 0;
@@ -843,6 +852,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
         super.onDestroy();
 
     }
+
     private void retryLivenessDetectDelayed(final Integer requestId) {
         Observable.timer(FAIL_RETRY_INTERVAL, TimeUnit.MILLISECONDS)
                 .subscribe(new Observer<Long>() {

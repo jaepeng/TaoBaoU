@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@mipmap/ic_launcher"
+        android:src="@mipmap/icon_touxiang"
         android:layout_width="@dimen/dp_140"
         android:layout_height="@dimen/dp_140"/>
 
