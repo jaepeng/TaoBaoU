@@ -39,7 +39,9 @@ import org.json.JSONObject;
 import org.json.JSONStringer;
 import org.json.JSONTokener;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -69,7 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
     };
     boolean libraryExists = true;
     private static final int ACTION_REQUEST_PERMISSIONS = 0x001;
-    private boolean accountCanPass= true;
+    private List<String> allUserNames=new ArrayList<>();
 
 
     @Override
@@ -86,6 +88,25 @@ public class RegisterActivity extends AppCompatActivity {
         mEdtAccount = findViewById(R.id.edt_register_account);
         mEdtPassword = findViewById(R.id.edt_register_password);
         mEdtRePassword = findViewById(R.id.edt__register_repassword);
+        //先获取到所有已注册用户名
+        Call<List<String>> task = mApi.getAllUserName();
+        task.enqueue(new Callback<List<String>>() {
+            @Override
+            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                Log.d(TAG, "onResponse: response.code"+ response.code());
+                Log.d(TAG, "onResponse: response.body"+ response.body());
+                if (response.code()==200){
+                    if (response.body()!=null){
+                        allUserNames=response.body();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<String>> call, Throwable t) {
+
+            }
+        });
 
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
@@ -235,33 +256,17 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean checkUserAccount(String registeraccount) {
         if (TextUtils.isEmpty(registeraccount)){
             ToastUtsils.showToast("用户名不能为空");
-            accountCanPass=false;
+            return false;
         }else if (registeraccount.length()<3){
             ToastUtsils.showToast("账户长度不允许小于3");
-            accountCanPass=false;
+            return false;
+        }else if (allUserNames.contains(registeraccount)){
+            ToastUtils.showShort("账户已被注册");
+            return false;
         }
-        Call<User> task = mApi.findUserByName(registeraccount);
-        task.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                Log.d(TAG, "onResponse: response.code"+ response.code());
-                Log.d(TAG, "onResponse: response.body"+ response.body());
-                if (response.code()==200){
-                    if (response.body()!=null){
-                        ToastUtils.showShort("账户已被注册");
-                        accountCanPass=false;
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-
-            }
-        });
 
 
-        return accountCanPass;
+        return true;
     }
 
     public static void setMap(Context context, Map<String, String> map) {

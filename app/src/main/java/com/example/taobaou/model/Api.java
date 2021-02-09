@@ -81,11 +81,14 @@ public interface Api {
 
 
     /**
-     * 查找所有了记录数据
+     * 根据用户名查找所有领券数据
      * @param account
      * @return
      */
     @GET("/ticketHistory/findAll?")
     Call<List<TicketHistory>> findAllTicketHistory(@Query("username") String account);
+
+    @GET("/firstdemo/getAllName")
+    Call<List<String>> getAllUserName();
 
 }
