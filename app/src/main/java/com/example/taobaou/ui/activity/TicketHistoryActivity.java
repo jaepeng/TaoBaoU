@@ -41,8 +41,8 @@ import retrofit2.Response;
 public class TicketHistoryActivity extends AppCompatActivity {
 
     private RecyclerView mRvHistory;
-    private boolean mHasTaobao=false;
-    private static final String TAG="TicketHistoryActivity";
+    private boolean mHasTaobao = false;
+    private static final String TAG = "TicketHistoryActivity";
     private List<TicketHistory> mTicketHistoryList;
     private TicketHisotryAdapter mTicketHisotryAdapter;
 
@@ -62,10 +62,10 @@ public class TicketHistoryActivity extends AppCompatActivity {
         task.enqueue(new Callback<List<TicketHistory>>() {
             @Override
             public void onResponse(Call<List<TicketHistory>> call, Response<List<TicketHistory>> response) {
-                Log.d(TAG, "onResponse: response.code"+response.code());
-                Log.d(TAG, "onResponse: response.body"+response.body());
-                if (response.code()==200){
-                    if (response.body()!=null){
+                Log.d(TAG, "onResponse: response.code" + response.code());
+                Log.d(TAG, "onResponse: response.body" + response.body());
+                if (response.code() == 200) {
+                    if (response.body() != null) {
                         mTicketHistoryList = response.body();
                         mTicketHisotryAdapter.setData(mTicketHistoryList);
                     }
@@ -80,25 +80,25 @@ public class TicketHistoryActivity extends AppCompatActivity {
     }
 
     private void initPresenter() {
-        PackageManager pm=getPackageManager();
+        PackageManager pm = getPackageManager();
         try {
             PackageInfo packageInfo = pm.getPackageInfo("com.taobao.taobao", PackageManager.MATCH_UNINSTALLED_PACKAGES);
-            mHasTaobao=packageInfo!=null;
+            mHasTaobao = packageInfo != null;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
-            mHasTaobao=false;
+            mHasTaobao = false;
         }
     }
 
     private void initView() {
         mRvHistory = findViewById(R.id.rv_history);
         mRvHistory.setLayoutManager(new LinearLayoutManager(this));
-        mTicketHisotryAdapter = new TicketHisotryAdapter();
+        mTicketHisotryAdapter = new TicketHisotryAdapter(this);
         mRvHistory.setAdapter(mTicketHisotryAdapter);
         mTicketHisotryAdapter.setOnHisotryTicketClickListener(new TicketHisotryAdapter.OnHisotryTicketClickListener() {
             @Override
-            public void onItemHisotryClick(String code,String coverpath) {
-                Log.d(TAG, "onItemHisotryClick: code:"+code+" ,coverpath"+coverpath);
+            public void onItemHisotryClick(String code, String coverpath) {
+                Log.d(TAG, "onItemHisotryClick: code:" + code + " ,coverpath" + coverpath);
                 ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 //复制到粘贴表
                 ClipData clipdata = ClipData.newPlainText("sob_tao_bao_ticket_code", code);
@@ -107,14 +107,14 @@ public class TicketHistoryActivity extends AppCompatActivity {
                 //如果有则打开淘宝,没有则提示复制成功
                 String account = SharedPreferenceManager.getInstance().getString(SpConstans.LAST_USER_ACCOUNT);
                 Api apiService = OtherRetrofitManager.getInstance().getApiService();
-                Call<Boolean> task = apiService.addTicketHistory(new TicketHistory(UrlUtils.getCoverPath(coverpath), account,code ));
+                Call<Boolean> task = apiService.addTicketHistory(new TicketHistory(UrlUtils.getCoverPath(coverpath), account, code));
                 task.enqueue(new Callback<Boolean>() {
                     @Override
                     public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                        if (response.code()==200){
-                            if (response.body().booleanValue()){
+                        if (response.code() == 200) {
+                            if (response.body().booleanValue()) {
                                 Log.d(TAG, "onResponse: 添加领券记录成功");
-                            }else{
+                            } else {
                                 Log.d(TAG, "onResponse: 添加领券失败");
                             }
                         }
@@ -125,22 +125,23 @@ public class TicketHistoryActivity extends AppCompatActivity {
 
                     }
                 });
-                if (mHasTaobao){
-                    Intent taobaoIntent=new Intent();
+                if (mHasTaobao) {
+                    Intent taobaoIntent = new Intent();
 //                    taobaoIntent.setAction("android.intent.action.Main");
 //                    taobaoIntent.addCategory("android.intent.category.LAUNCHER");
                     //todo:无法跳转到对应的领券界面,查看是否这里除了问题
-                    ComponentName componentName=new ComponentName("com.taobao.taobao","com.taobao.tao.TBMainActivity");
+                    ComponentName componentName = new ComponentName("com.taobao.taobao", "com.taobao.tao.TBMainActivity");
                     taobaoIntent.setComponent(componentName);
                     startActivity(taobaoIntent);
-                }else{
+                } else {
                     ToastUtsils.showToast("复制成功!粘贴分享");
                 }
             }
         });
 
     }
-    public static LinkedHashMap<String,String> getMap(Context context) {
+
+    public static LinkedHashMap<String, String> getMap(Context context) {
         LinkedHashMap<String, String> examMap = new LinkedHashMap<>();
         SharedPreferences sp = context.getSharedPreferences(Constants.SP_KEY_HISTORY_TIECKT, Context.MODE_PRIVATE);
         String map = sp.getString(Constants.SP_KEY_HISTORY_TIECKT_MAP, "");
