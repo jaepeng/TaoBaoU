@@ -38,7 +38,7 @@ public class TicketHisotryAdapter extends RecyclerView.Adapter<TicketHisotryAdap
         TextView itemTv=holder.itemView.findViewById(R.id.tv_ticket_history);
         ImageView itemIv=holder.itemView.findViewById(R.id.iv_ticket_history);
         itemTv.setText(codes[position]);
-        Glide.with(mItemView).load(urls[position]);
+        Glide.with(mItemView).load(urls[position]).placeholder(R.mipmap.image).into(itemIv);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
