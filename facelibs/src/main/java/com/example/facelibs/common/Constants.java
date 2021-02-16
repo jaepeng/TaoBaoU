@@ -16,6 +16,7 @@ public class Constants {
 
 
     public static final String  FACE_REGISTER_ACCOUNT="face_register_account";
+    public static final String  IS_FACE_LOGIN="is_face_login";
 
 
 

@@ -21,6 +21,7 @@ import com.example.taobaou.model.Api;
 import com.example.taobaou.model.domain.User;
 import com.example.taobaou.model.message.MessageCode;
 import com.example.taobaou.model.message.MessageEvent;
+import com.example.taobaou.ui.activity.ChangePswActivity;
 import com.example.taobaou.ui.activity.LoginActivity;
 import com.example.taobaou.ui.activity.RegisterActivity;
 import com.example.taobaou.ui.activity.TicketHistoryActivity;
@@ -81,9 +82,9 @@ public class MyInfoFragment extends BaseFragment {
         //只有Success了才会显示界面信息
         setUpState(State.SUCCESS);
         tv_bar_title.setText("我的信息");
-        loginHide(false);
+        isloginShow(false);
         if (!TextUtils.isEmpty(mLastUserAccount)){
-            loginHide(true);
+            isloginShow(true);
             tv_username.setText(mLastUserAccount);
         }
         //点击注册按钮进入注册界面
@@ -104,7 +105,7 @@ public class MyInfoFragment extends BaseFragment {
         btnUnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginHide(false);
+                isloginShow(false);
                 SharedPreferenceManager.getInstance().delete(SpConstans.LAST_USER_ACCOUNT);
             }
         });
@@ -120,7 +121,17 @@ public class MyInfoFragment extends BaseFragment {
                 setHeadImage();
             }
         });
+        tvChangePwd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changePsw();
+            }
+        });
 
+    }
+
+    private void changePsw() {
+            startActivity(new Intent(getActivity(), ChangePswActivity.class));
     }
 
     private void setHeadImage() {
@@ -141,21 +152,21 @@ public class MyInfoFragment extends BaseFragment {
     public void onEvent(MessageEvent messageEvent) {
         if (messageEvent.getMessageCode()== MessageCode.LOGINUSERACCOUNT){
             //进入登录状态
-            loginHide(true);
+            isloginShow(true);
             tv_username.setText(messageEvent.getMkeyword());
             SharedPreferenceManager.getInstance().putValue(SpConstans.LAST_USER_ACCOUNT,messageEvent.getMkeyword());
         }
 
         if (messageEvent.getMessageCode()==MessageCode.REGISTERUSERACCOUNT){
             //注册成功返回
-            loginHide(true);
+            isloginShow(true);
             tv_username.setText(messageEvent.getMkeyword());
             SharedPreferenceManager.getInstance().putValue(SpConstans.LAST_USER_ACCOUNT,messageEvent.getMkeyword());
         }
         if (messageEvent.getMessageCode()==MessageCode.FACE_RECOGNIZED_SUCCESS){
             //todo:如果是人脸注册，则是先注册，让后再识别，人脸识别成功再走这条路
             Log.d("jae", "Register : "+messageEvent.getMkeyword());
-            loginHide(true);
+            isloginShow(true);
             SharedPreferenceManager.getInstance().putValue(SpConstans.LAST_USER_ACCOUNT,messageEvent.getMkeyword());
             tv_username.setText(messageEvent.getMkeyword());
         }
@@ -180,6 +191,12 @@ public class MyInfoFragment extends BaseFragment {
             });
         }
 
+        if (messageEvent.getMessageCode()==MessageCode.CHANGEPWSSUCCESS){
+            //更改密码成功
+            Log.d(TAG, "onEvent: 密码修改成功");
+            isloginShow(false);
+        }
+
 
     }
 
@@ -194,7 +211,7 @@ public class MyInfoFragment extends BaseFragment {
 
     }
 
-    public void loginHide(Boolean isLogin){
+    public void isloginShow(Boolean isLogin){
 
         if (isLogin){
             //登录状态

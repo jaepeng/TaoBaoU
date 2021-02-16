@@ -95,4 +95,8 @@ public interface Api {
     @GET("/firstdemo/getAllName")
     Call<List<String>> getAllUserName();
 
+
+    @GET("/firstdemo/changePsw")
+    Call<Boolean> changePwd(@Query("username") String username,@Query("newpsw")String newpsw);
+
 }

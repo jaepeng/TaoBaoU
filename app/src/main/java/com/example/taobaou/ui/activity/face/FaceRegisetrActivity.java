@@ -183,6 +183,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
     private Button mBtnRegister;
     //用来判断是拿来注册还是登录
     private boolean isRegister = true;
+    private Intent mIntent;
 
     public static void startActivity(Context context, String string) {
         Intent intent = new Intent(context, FaceRegisetrActivity.class);
@@ -190,6 +191,12 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
         context.startActivity(intent);
 
     }
+    public static void startActivity(Context context, boolean islogin) {
+        Intent intent = new Intent(context, FaceRegisetrActivity.class);
+        intent.putExtra(Constants.IS_FACE_LOGIN, islogin);
+        context.startActivity(intent);
+    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -209,7 +216,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
         //todo:清除本地人脸数据
 
-        FaceServer.getInstance().clearAllFaces(this);
+//        FaceServer.getInstance().clearAllFaces(this);
         //本地人脸库初始化
         FaceServer.getInstance().init(this);
 
@@ -218,7 +225,13 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
     }
 
     private void initView() {
+
         mBtnRegister = findViewById(com.arcsoft.arcfacedemo.R.id.btn_rar_regisetr);
+        mIntent = getIntent();
+        if (mIntent.getBooleanExtra(Constants.IS_FACE_LOGIN,false)){
+            //如果是进行登录，则要将注册按钮隐藏
+            mBtnRegister.setVisibility(View.INVISIBLE);
+        }
         previewView = findViewById(com.arcsoft.arcfacedemo.R.id.single_camera_texture_preview);
         //在布局结束后才做初始化操作
         previewView.getViewTreeObserver().addOnGlobalLayoutListener(this);
@@ -518,8 +531,8 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
 
     private void registerFace(final byte[] nv21, final List<FacePreviewInfo> facePreviewInfoList) {
         //获得传入的用户名
-        Intent intent = getIntent();
-        String accountString = intent.getStringExtra(Constants.FACE_REGISTER_ACCOUNT);
+        mIntent = getIntent();
+        String accountString = mIntent.getStringExtra(Constants.FACE_REGISTER_ACCOUNT);
 
         if (registerStatus == REGISTER_STATUS_READY && facePreviewInfoList != null && facePreviewInfoList.size() > 0) {
             registerStatus = REGISTER_STATUS_PROCESSING;
@@ -545,7 +558,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
                         @Override
                         public void onNext(Boolean success) {
                             String result = success ? "register success!" : "register failed!";
-                            ToastUtsils.showToast(result);
+//                            ToastUtsils.showToast(result);
                             Log.d(TAG, "onNext: 人脸注册成功");
                             registerStatus = REGISTER_STATUS_DONE;
                             EventBus.getDefault().post(new MessageEvent(MessageCode.FACE_REGISTER_SUCCESS, accountString));

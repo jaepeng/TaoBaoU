@@ -64,7 +64,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:inputType="textPassword"
+            android:inputType="numberPassword"
             android:id="@+id/edt_register_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:inputType="textPassword"
+            android:inputType="numberPassword"
             android:id="@+id/edt__register_repassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

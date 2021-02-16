@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_gravity="center"
-    tools:context=".ui.activity.LoginActivity">
+    tools:context=".ui.activity.ChangePswActivity">
+
+
     <LinearLayout
+        android:id="@+id/ll_top_bar"
+        app:layout_constraintTop_toTopOf="parent"
+
         android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="40dp">
@@ -20,33 +23,38 @@
             android:layout_height="match_parent"/>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/ll_old_pwd"
+        app:layout_constraintTop_toBottomOf="@+id/ll_top_bar"
         android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="账   号:"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@id/edt_login_account"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="新密码:"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@id/edt_login_account"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/edt_login_account"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="请输入账号"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/textView"
-        app:layout_constraintTop_toTopOf="@+id/textView" />
+        <EditText
+            android:inputType="numberPassword"
+            android:id="@+id/edt_change_pwd_new_psw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="请输入新密码"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/textView"
+            app:layout_constraintTop_toTopOf="@+id/textView" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_new_pwd"
+        app:layout_constraintTop_toBottomOf="@+id/ll_old_pwd"
         android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
         android:orientation="horizontal"
@@ -58,7 +66,7 @@
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="密  码:"
+            android:text="新密码:"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@id/edt_login_account"
             app:layout_constraintStart_toStartOf="parent"
@@ -66,27 +74,18 @@
 
         <EditText
             android:inputType="numberPassword"
-            android:id="@+id/edt__login_password"
+            android:id="@+id/edt_change_psd_repate_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="请输入密码"
+            android:hint="请再次输入新密码"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/textView1"
             app:layout_constraintTop_toTopOf="@+id/textView1" />
     </LinearLayout>
-<Button
-    android:id="@+id/btn_login_act_login"
-    android:text="登录"
-    android:textSize="18sp"
-    android:background="@drawable/bg_my_info_btn_login"
-    android:layout_marginTop="20dp"
-    android:layout_marginStart="20dp"
-    android:layout_marginEnd="20dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
     <Button
-        android:id="@+id/btn_login_act_face_login"
-        android:text="人脸登录"
+        app:layout_constraintTop_toBottomOf="@+id/ll_new_pwd"
+        android:id="@+id/btn_chang_psw_act_change"
+        android:text="确认修改"
         android:textSize="18sp"
         android:background="@drawable/bg_my_info_btn_login"
         android:layout_marginTop="20dp"
@@ -94,4 +93,5 @@
         android:layout_marginEnd="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-</LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

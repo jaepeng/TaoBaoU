@@ -9,6 +9,9 @@ public class MessageEvent {
         mkeyword = keyword;
     }
 
+    public MessageEvent(int messageCode) {
+        MessageCode = messageCode;
+    }
 
     public String getMkeyword() {
         return mkeyword;

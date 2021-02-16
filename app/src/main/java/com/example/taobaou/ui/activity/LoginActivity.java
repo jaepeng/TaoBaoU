@@ -14,6 +14,7 @@ import com.example.taobaou.model.Api;
 import com.example.taobaou.model.domain.User;
 import com.example.taobaou.model.message.MessageCode;
 import com.example.taobaou.model.message.MessageEvent;
+import com.example.taobaou.ui.activity.face.FaceRegisetrActivity;
 import com.example.taobaou.utils.Constants;
 import com.example.taobaou.utils.OtherRetrofitManager;
 import com.example.taobaou.utils.SharedPreferenceManager;
@@ -40,6 +41,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText mEdtAccount;
     private EditText mEdtPassword;
     private Api mApi;
+    private Button mBtnFaceLogin;
 
 
     @Override
@@ -49,7 +51,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mBtnLogin = findViewById(R.id.btn_login_act_login);
         mEdtAccount = findViewById(R.id.edt_login_account);
         mEdtPassword = findViewById(R.id.edt__login_password);
+        mBtnFaceLogin = findViewById(R.id.btn_login_act_face_login);
         mBtnLogin.setOnClickListener(this);
+        mBtnFaceLogin.setOnClickListener(this);
         mApi= OtherRetrofitManager.getInstance().getApiService();
     }
 
@@ -104,9 +108,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        mAccount = mEdtAccount.getText().toString();
-        mPassword = mEdtPassword.getText().toString();
+        if (v.getId()==R.id.btn_login_act_login){
+            mAccount = mEdtAccount.getText().toString();
+            mPassword = mEdtPassword.getText().toString();
             loginByPassword(mAccount, mPassword);
+        }else if (v.getId()==R.id.btn_login_act_face_login){
+            FaceRegisetrActivity.startActivity(this,true);
+            finish();
+        }
+
 
     }
 }
