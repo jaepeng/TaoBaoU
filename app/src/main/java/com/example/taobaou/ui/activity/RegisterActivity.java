@@ -25,7 +25,6 @@ import com.example.taobaou.model.Api;
 import com.example.taobaou.model.domain.User;
 import com.example.taobaou.model.message.MessageCode;
 import com.example.taobaou.model.message.MessageEvent;
-import com.example.taobaou.ui.activity.face.FaceRegisetrActivity;
 import com.example.taobaou.utils.Constants;
 import com.example.taobaou.utils.OtherRetrofitManager;
 import com.example.taobaou.utils.SharedPreferenceManager;
@@ -154,8 +153,8 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String account = mEdtAccount.getText().toString();
                 if (checkUserAccount(account)){
-                    FaceRegisetrActivity.startActivity(RegisterActivity.this,account);
-                    finish();
+//                    FaceRegisetrActivity.startActivity(RegisterActivity.this,account);
+//                    finish();
                 }
 
             }

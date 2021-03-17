@@ -25,6 +25,7 @@ import com.example.taobaou.ui.activity.ChangePswActivity;
 import com.example.taobaou.ui.activity.LoginActivity;
 import com.example.taobaou.ui.activity.RegisterActivity;
 import com.example.taobaou.ui.activity.TicketHistoryActivity;
+import com.example.taobaou.ui.activity.face.FaceRegisetrActivity;
 import com.example.taobaou.utils.OtherRetrofitManager;
 import com.example.taobaou.utils.SharedPreferenceManager;
 import com.example.taobaou.utils.SpConstans;
@@ -38,6 +39,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -61,8 +63,11 @@ public class MyInfoFragment extends BaseFragment {
     Button btnUnRegister;
     @BindView(R.id.tv_myInfo_change_pwd)
     TextView tvChangePwd;
+    @BindView(R.id.tv_bind_face)
+    TextView tvBindFace;
     private String mLastUserAccount;
     public static final String TAG="MyInfoFragment";
+    private Api mApiService;
 
     @Override
     protected int getRootViewResid() {
@@ -71,6 +76,8 @@ public class MyInfoFragment extends BaseFragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        mApiService = OtherRetrofitManager.getInstance().getApiService();
+
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         mLastUserAccount = SharedPreferenceManager.getInstance().getString(SpConstans.LAST_USER_ACCOUNT);
@@ -127,6 +134,35 @@ public class MyInfoFragment extends BaseFragment {
                 changePsw();
             }
         });
+        tvBindFace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Call<List<String>> task = mApiService.getAllFace();
+                task.enqueue(new Callback<List<String>>() {
+                    @Override
+                    public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                        if (response.code()==200){
+                            Log.d(TAG, "onResponse: "+response.body().size());
+                            if (response.body().contains(SharedPreferenceManager.getInstance().getString(SpConstans.LAST_USER_ACCOUNT))){
+                                ToastUtils.showShort("该账号已经绑定过了！");
+                            }else{
+                                String account = SharedPreferenceManager.getInstance().getString(SpConstans.LAST_USER_ACCOUNT);
+                                FaceRegisetrActivity.startActivity(getContext(),account);
+                            }
+                        }else{
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<String>> call, Throwable t) {
+                        Log.d(TAG, "onFailure: "+t.getMessage());
+                    }
+                });
+
+
+            }
+        });
 
     }
 
@@ -177,11 +213,7 @@ public class MyInfoFragment extends BaseFragment {
             task.enqueue(new Callback<Boolean>() {
                 @Override
                 public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                    Log.d(TAG, "onResponse: response.body"+response.body());
-                    Log.d(TAG, "onResponse: response.body"+response.code());
-                    if (response.code()==200){
-                        ToastUtils.showShort("人脸注册成功");
-                    }
+
                 }
 
                 @Override
@@ -215,13 +247,13 @@ public class MyInfoFragment extends BaseFragment {
 
         if (isLogin){
             //登录状态
-            showViwe(iv_myImage,tv_username,tv_couponHistory,btnUnRegister,tvChangePwd);
+            showViwe(iv_myImage,tv_username,tv_couponHistory,btnUnRegister,tvChangePwd,tvBindFace);
             hideView(btnLogin,btnRegister);
 
         }else{
             //未登录状态
             showViwe(btnLogin,btnRegister);
-            hideView(iv_myImage,tv_username,tv_couponHistory,btnUnRegister,tvChangePwd);
+            hideView(iv_myImage,tv_username,tv_couponHistory,btnUnRegister,tvChangePwd,tvBindFace);
 
         }
 

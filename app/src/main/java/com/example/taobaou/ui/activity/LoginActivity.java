@@ -3,6 +3,7 @@ package com.example.taobaou.ui.activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -66,7 +67,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (response.code()==200){
                     ToastUtsils.showToast("登录成功");
                     if (response.body()!=null){
-                        SharedPreferenceManager.getInstance().putValue(SpConstans.LAST_USER_ACCOUNT,response.body().getAccount());
+                        Log.d("jae", "onResponse: "+response.body().getAccount());
+                        SharedPreferenceManager.getInstance().putValue(SpConstans.LAST_USER_ACCOUNT,account);
                         EventBus.getDefault().post(new MessageEvent(MessageCode.LOGINUSERACCOUNT,account));
                         finish();
                     }else{
@@ -81,6 +83,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                Log.d("jae", "onFailure: t"+t.getMessage());
                 ToastUtsils.showToast("登录失败");
             }
         });

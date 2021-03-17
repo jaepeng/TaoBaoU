@@ -40,6 +40,7 @@ import com.example.facelibs.faceserver.CompareResult;
 import com.example.facelibs.faceserver.FaceServer;
 import com.example.facelibs.model.DrawInfo;
 import com.example.facelibs.model.FacePreviewInfo;
+import com.example.facelibs.model.FaceRegisterInfo;
 import com.example.facelibs.util.ConfigUtil;
 import com.example.facelibs.util.DrawHelper;
 import com.example.facelibs.util.camera.CameraHelper;
@@ -55,6 +56,7 @@ import com.example.facelibs.widget.FaceSearchResultAdapter;
 import com.example.taobaou.R;
 import com.example.taobaou.model.message.MessageCode;
 import com.example.taobaou.model.message.MessageEvent;
+import com.example.taobaou.utils.OtherRetrofitManager;
 import com.example.taobaou.utils.ToastUtsils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -74,6 +76,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeObserver.OnGlobalLayoutListener {
     private static final String TAG = "FaceRegisetrActivity";
@@ -561,8 +566,27 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
 //                            ToastUtsils.showToast(result);
                             Log.d(TAG, "onNext: 人脸注册成功");
                             registerStatus = REGISTER_STATUS_DONE;
-                            EventBus.getDefault().post(new MessageEvent(MessageCode.FACE_REGISTER_SUCCESS, accountString));
-                            finish();
+                            ToastUtsils.showToast("正在注册,请稍后");
+                            Call<Boolean> task = OtherRetrofitManager.getInstance().getApiService().addOneFace(new FaceRegisterInfo(nv21, accountString));
+                            task.enqueue(new Callback<Boolean>() {
+                                @Override
+                                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                                    if (response.code()==200){
+                                        if (response.body()==true){
+                                            EventBus.getDefault().post(new MessageEvent(MessageCode.FACE_REGISTER_SUCCESS, accountString));
+                                            finish();
+                                        }else{
+                                            ToastUtsils.showToast("人脸注册失败,请重试");
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Boolean> call, Throwable t) {
+                                    ToastUtsils.showToast("人脸注册失败,请重试");
+                                }
+                            });
+
                         }
 
                         @Override

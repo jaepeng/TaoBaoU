@@ -1,5 +1,6 @@
 package com.example.taobaou.model;
 
+import com.example.facelibs.model.FaceRegisterInfo;
 import com.example.taobaou.model.domain.Categories;
 import com.example.taobaou.model.domain.HomePagerContent;
 import com.example.taobaou.model.domain.OnSellContetn;
@@ -98,5 +99,17 @@ public interface Api {
 
     @GET("/firstdemo/changePsw")
     Call<Boolean> changePwd(@Query("username") String username,@Query("newpsw")String newpsw);
+
+
+    /**
+     * 通过用户名查找是否已注册人脸
+     * @param
+     * @return
+     */
+    @GET("/faceRegister/getAllRegisterName")
+    Call<List<String>> getAllFace();
+
+    @POST("/faceRegister/addRegisterInfo")
+    Call<Boolean> addOneFace(@Body FaceRegisterInfo faceRegisterInfo);
 
 }

@@ -115,6 +115,7 @@ public class FaceServer {
      * @param context 上下文对象
      */
     private void initFaceList(Context context) {
+        Log.d(TAG, "initFaceList: ");
         synchronized (this) {
             if (ROOT_PATH == null) {
                 ROOT_PATH = context.getFilesDir().getAbsolutePath();
@@ -142,6 +143,7 @@ public class FaceServer {
                             if (response.code()==200){
                                 if (response.body().booleanValue()) {
                                     Log.d(TAG, "onResponse: 添加人脸成功");
+
                                 }else{
                                     Log.d(TAG, "onResponse: 添加人脸失败");
                                 }
@@ -305,7 +307,7 @@ public class FaceServer {
                     }
                     //todo:注册成功添加人脸数据
                     Log.d(TAG, "registerNv21: 去注册!!");
-
+                    Log.d(TAG, "registerNv21: "+userName);
                     Call<Boolean> task = apiService.addRegisterFace(new FaceRegisterInfo(faceFeature.getFeatureData(), userName));
                     task.enqueue(new Callback<Boolean>() {
                         @Override
@@ -321,7 +323,7 @@ public class FaceServer {
 
                         @Override
                         public void onFailure(Call<Boolean> call, Throwable t) {
-
+                            Log.d(TAG, "onFailure: "+t.getMessage());
                         }
                     });
 
@@ -499,6 +501,10 @@ public class FaceServer {
      * @return 比对结果
      */
     public CompareResult getTopOfFaceLib(FaceFeature faceFeature) {
+        Log.d(TAG, "getTopOfFaceLib: "+faceRegisterInfoList.size());
+        if (faceRegisterInfoList.size()==0){
+
+        }
         if (faceEngine == null || isProcessing || faceFeature == null || faceRegisterInfoList == null || faceRegisterInfoList.size() == 0) {
             return null;
         }
@@ -507,6 +513,7 @@ public class FaceServer {
         float maxSimilar = 0;
         int maxSimilarIndex = -1;
         isProcessing = true;
+
         for (int i = 0; i < faceRegisterInfoList.size(); i++) {
             tempFaceFeature.setFeatureData(faceRegisterInfoList.get(i).getFeatureData());
             //todo:人脸特征比对
