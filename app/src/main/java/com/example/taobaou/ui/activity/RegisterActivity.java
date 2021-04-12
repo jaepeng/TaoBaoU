@@ -26,6 +26,7 @@ import com.example.taobaou.model.domain.User;
 import com.example.taobaou.model.message.MessageCode;
 import com.example.taobaou.model.message.MessageEvent;
 import com.example.taobaou.utils.Constants;
+import com.example.taobaou.utils.MD5Utils;
 import com.example.taobaou.utils.OtherRetrofitManager;
 import com.example.taobaou.utils.SharedPreferenceManager;
 import com.example.taobaou.utils.SpConstans;
@@ -115,7 +116,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if (checkUserAccount(registeraccount)){
                     if (checkUserPassword(mEdtPassword.getText().toString(),mEdtRePassword.getText().toString())) {
                        //todo:账号密码都输入正确,去注册
-                        Call<Boolean> task = mApi.addUser(new User(registeraccount, mEdtPassword.getText().toString()));
+                        Call<Boolean> task = mApi.addUser(new User(registeraccount, MD5Utils.encode2hex(mEdtPassword.getText().toString())));
                         task.enqueue(new Callback<Boolean>() {
                             @Override
                             public void onResponse(Call<Boolean> call, Response<Boolean> response) {

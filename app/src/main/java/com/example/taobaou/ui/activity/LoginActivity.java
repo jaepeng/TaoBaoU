@@ -17,6 +17,7 @@ import com.example.taobaou.model.message.MessageCode;
 import com.example.taobaou.model.message.MessageEvent;
 import com.example.taobaou.ui.activity.face.FaceRegisetrActivity;
 import com.example.taobaou.utils.Constants;
+import com.example.taobaou.utils.MD5Utils;
 import com.example.taobaou.utils.OtherRetrofitManager;
 import com.example.taobaou.utils.SharedPreferenceManager;
 import com.example.taobaou.utils.SpConstans;
@@ -60,7 +61,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void loginByPassword(String account, String password) {
 
-        Call<User> task = mApi.login(account, password);
+        Call<User> task = mApi.login(account, MD5Utils.encode2hex(password)) ;
         task.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
