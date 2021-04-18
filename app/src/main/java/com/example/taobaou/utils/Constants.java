@@ -1,10 +1,12 @@
 package com.example.taobaou.utils;
 
+import com.example.baselib.AppConstant;
+
 public class Constants {
 
     //base Url
-    public static final String BASE_URL ="https://api.sunofbeach.net/shop/";
-    public static final String OTHER_BASE_URL ="http://192.168.31.121:8080";
+    public static final String BASE_URL = AppConstant.BASE_URL;
+    public static final String OTHER_BASE_URL =AppConstant.BASE_OTHER_URL;
     //home page fragment bundle key
     public static final String KEY_HOME_PAGE_TITLE="key_home_page_title";
     public static final String KEY_HOME_PAGE_MATERIAL_ID="key_home_page_material_id";

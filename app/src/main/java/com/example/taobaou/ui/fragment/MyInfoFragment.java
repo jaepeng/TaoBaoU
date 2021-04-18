@@ -26,6 +26,7 @@ import com.example.taobaou.ui.activity.LoginActivity;
 import com.example.taobaou.ui.activity.RegisterActivity;
 import com.example.taobaou.ui.activity.TicketHistoryActivity;
 import com.example.taobaou.ui.activity.face.FaceRegisetrActivity;
+import com.example.taobaou.ui.custom.StandardNormalPopup;
 import com.example.taobaou.utils.OtherRetrofitManager;
 import com.example.taobaou.utils.SharedPreferenceManager;
 import com.example.taobaou.utils.SpConstans;
@@ -68,6 +69,7 @@ public class MyInfoFragment extends BaseFragment {
     private String mLastUserAccount;
     public static final String TAG="MyInfoFragment";
     private Api mApiService;
+    private StandardNormalPopup logoutPopup;
 
     @Override
     protected int getRootViewResid() {
@@ -112,8 +114,18 @@ public class MyInfoFragment extends BaseFragment {
         btnUnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isloginShow(false);
-                SharedPreferenceManager.getInstance().delete(SpConstans.LAST_USER_ACCOUNT);
+                if (logoutPopup==null){
+                    logoutPopup=new StandardNormalPopup.SetBuilder(getContext())
+                            .setBtnConfirm("确认退出",() -> {
+                                isloginShow(false);
+                                SharedPreferenceManager.getInstance().delete(SpConstans.LAST_USER_ACCOUNT);
+                            })
+                            .setTitle("退出")
+                            .setMessage("确定退出吗？")
+                            .setBtnCancel("取消",() -> {}).build();
+                }
+                logoutPopup.show();
+
             }
         });
         tv_couponHistory.setOnClickListener(new View.OnClickListener() {

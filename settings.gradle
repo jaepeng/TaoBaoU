@@ -1,3 +1,4 @@
+include ':baselib'
 include ':facelibs'
 include ':baidusearch'
 include ':app',':refreshlibrary'

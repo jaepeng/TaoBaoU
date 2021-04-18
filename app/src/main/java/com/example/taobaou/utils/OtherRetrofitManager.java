@@ -1,5 +1,6 @@
 package com.example.taobaou.utils;
 
+import com.example.baselib.AppConstant;
 import com.example.taobaou.model.Api;
 
 import retrofit2.Retrofit;
@@ -17,7 +18,7 @@ public class OtherRetrofitManager {
 
         //创建retrofit
         mRetrofit = new Retrofit.Builder()
-                .baseUrl(Constants.OTHER_BASE_URL)
+                .baseUrl(AppConstant.BASE_OTHER_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

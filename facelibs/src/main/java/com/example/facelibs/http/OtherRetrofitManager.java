@@ -1,6 +1,6 @@
 package com.example.facelibs.http;
 
-import com.example.facelibs.common.Constants;
+import com.example.baselib.AppConstant;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -17,7 +17,7 @@ public class OtherRetrofitManager {
 
         //创建retrofit
         mRetrofit = new Retrofit.Builder()
-                .baseUrl(Constants.OTHER_BASE_URL)
+                .baseUrl(AppConstant.BASE_OTHER_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

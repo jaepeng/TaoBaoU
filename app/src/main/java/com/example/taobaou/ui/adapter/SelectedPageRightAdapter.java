@@ -90,7 +90,7 @@ public class SelectedPageRightAdapter extends RecyclerView.Adapter<SelectedPageR
         public void setData(SelectedContent.DataBean.TbkDgOptimusMaterialResponseBean.ResultListBean.MapDataBean itemData) {
            title.setText(itemData.getTitle());
             if (TextUtils.isEmpty(itemData.getCoupon_click_url())) {
-                originPice.setText("晚啦!没有券了");
+                originPice.setText("晚啦!等待下次放券噢!");
                 goBuyBtn.setVisibility(View.GONE);
             }else{
                 originPice.setText("原价:"+itemData.getZk_final_price()+"元");

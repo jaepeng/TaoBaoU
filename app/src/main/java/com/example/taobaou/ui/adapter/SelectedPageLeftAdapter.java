@@ -72,6 +72,7 @@ public class SelectedPageLeftAdapter extends RecyclerView.Adapter<SelectedPageLe
         if ( data!= null) {
             this.mdata.clear();
             this.mdata.addAll(data);
+            data.remove(data.size()-1);
             notifyDataSetChanged();
         }
     }
