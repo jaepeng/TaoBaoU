@@ -112,7 +112,7 @@ public class LinerItemContentAdapter extends RecyclerView.Adapter<LinerItemConte
                 String coverPath = UrlUtils.getCoverPath(dataBean.getCover());
                 Glide.with(context).load(coverPath).into(this.coverImage);
             }else{
-                coverImage.setImageResource(R.mipmap.ic_launcher);
+                coverImage.setImageResource(R.mipmap.ic_logo);
             }
 //            LogUtils.d(HomePageContentAdapter.this,"coverPath----->"+coverPath);
             String finalPrice = dataBean.getfinalPrice();
