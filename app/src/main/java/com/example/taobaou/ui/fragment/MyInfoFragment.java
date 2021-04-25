@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.taobaou.R;
 import com.example.taobaou.base.BaseFragment;
 import com.example.taobaou.model.Api;
@@ -27,6 +28,7 @@ import com.example.taobaou.ui.activity.RegisterActivity;
 import com.example.taobaou.ui.activity.TicketHistoryActivity;
 import com.example.taobaou.ui.activity.face.FaceRegisetrActivity;
 import com.example.taobaou.ui.custom.StandardNormalPopup;
+import com.example.taobaou.utils.GlideRoundTransform;
 import com.example.taobaou.utils.OtherRetrofitManager;
 import com.example.taobaou.utils.SharedPreferenceManager;
 import com.example.taobaou.utils.SpConstans;
@@ -186,7 +188,10 @@ public class MyInfoFragment extends BaseFragment {
         EasyPhotos.createAlbum(this,true, GlideEngine.getInstance()).start(new SelectCallback() {
             @Override
             public void onResult(ArrayList<Photo> photos, ArrayList<String> paths, boolean isOriginal) {
-                Glide.with(getActivity()).load(paths.get(0)).into(iv_myImage);
+                Glide.with(getActivity())
+                        .load(paths.get(0))
+                        .apply(new RequestOptions().transform(new GlideRoundTransform(getActivity(), 60)))
+                        .into(iv_myImage);
             }
         });
     }
