@@ -36,6 +36,9 @@ import com.example.taobaou.utils.engine.GlideEngine;
 import com.huantansheng.easyphotos.EasyPhotos;
 import com.huantansheng.easyphotos.callback.SelectCallback;
 import com.huantansheng.easyphotos.models.album.entity.Photo;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.impl.LoadingPopupView;
+import com.lxj.xpopup.interfaces.OnInputConfirmListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -72,6 +75,8 @@ public class MyInfoFragment extends BaseFragment {
     public static final String TAG="MyInfoFragment";
     private Api mApiService;
     private StandardNormalPopup logoutPopup;
+    private String mAccount;
+    private LoadingPopupView mLoadingPopupView;
 
     @Override
     protected int getRootViewResid() {
@@ -80,11 +85,32 @@ public class MyInfoFragment extends BaseFragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        mApiService = OtherRetrofitManager.getInstance().getApiService();
-
         super.onCreate(savedInstanceState);
+        mAccount = SharedPreferenceManager.getInstance().getString(SpConstans.LAST_USER_ACCOUNT);
+        mApiService = OtherRetrofitManager.getInstance().getApiService();
         EventBus.getDefault().register(this);
         mLastUserAccount = SharedPreferenceManager.getInstance().getString(SpConstans.LAST_USER_ACCOUNT);
+        Call<String> userHeaderurl = mApiService.getUserHeaderurl(mAccount);
+        userHeaderurl.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.d(TAG, "加载头像 onResponse: "+response.code()+" body"+response.body());
+                if (response.code()==200){
+                    Log.d(TAG, "onResponse: "+response.body());
+                    if (response.isSuccessful()) {
+                        Glide.with(getActivity())
+                                .load(response.body())
+                                .apply(new RequestOptions().transform(new GlideRoundTransform(getActivity(), 60)))
+                                .into(iv_myImage);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e(TAG, "onFailure: "+t.getMessage(),t);
+            }
+        });
 
     }
 
@@ -142,6 +168,52 @@ public class MyInfoFragment extends BaseFragment {
                 setHeadImage();
             }
         });
+        iv_myImage.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                new XPopup.Builder(getContext()).asInputConfirm("头像链接", "请输入头像链接",
+                        new OnInputConfirmListener() {
+                            @Override
+                            public void onConfirm(String text) {
+                                mLoadingPopupView = new XPopup.Builder(getContext())
+                                        .asLoading("正在上传头像中");
+                                mLoadingPopupView.show();
+                                Call<Boolean> setHeaderTask = mApiService.setUserHeader(mAccount, text);
+                                setHeaderTask.enqueue(new Callback<Boolean>() {
+                                    @Override
+                                    public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                                        Log.d(TAG, "onResponse: "+response.code()+"  body:"+response.body()+"  isSuccess"+response.isSuccessful());
+                                        if (response.code()==200){
+                                            if (response.isSuccessful()){
+                                                ToastUtils.showShort("头像上传成功!");
+                                                if (mLoadingPopupView!=null&&mLoadingPopupView.isShow()){
+                                                    mLoadingPopupView.dismiss();
+                                                }
+                                            }
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Boolean> call, Throwable t) {
+                                        ToastUtils.showShort("头像上传失败!");
+                                        if (mLoadingPopupView!=null&&mLoadingPopupView.isShow()){
+                                            mLoadingPopupView.dismiss();
+                                        }
+                                    }
+                                });
+                                Glide.with(getActivity())
+                                        .load(text)
+                                        .placeholder(R.mipmap.icon_touxiang)
+                                        .apply(new RequestOptions().transform(new GlideRoundTransform(getActivity(), 60)))
+                                        .into(iv_myImage);
+
+                            }
+                        })
+                        .show();
+                return true;
+            }
+        });
         tvChangePwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,8 +232,8 @@ public class MyInfoFragment extends BaseFragment {
                             if (response.body().contains(SharedPreferenceManager.getInstance().getString(SpConstans.LAST_USER_ACCOUNT))){
                                 ToastUtils.showShort("该账号已经绑定过了！");
                             }else{
-                                String account = SharedPreferenceManager.getInstance().getString(SpConstans.LAST_USER_ACCOUNT);
-                                FaceRegisetrActivity.startActivity(getContext(),account);
+
+                                FaceRegisetrActivity.startActivity(getContext(),mAccount);
                             }
                         }else{
 
@@ -188,8 +260,28 @@ public class MyInfoFragment extends BaseFragment {
         EasyPhotos.createAlbum(this,true, GlideEngine.getInstance()).start(new SelectCallback() {
             @Override
             public void onResult(ArrayList<Photo> photos, ArrayList<String> paths, boolean isOriginal) {
+                // TODO: 2021/4/25 上传图片数据
+                Call<Boolean> setHeaderTask = mApiService.setUserHeader(mAccount, paths.get(0));
+                setHeaderTask.enqueue(new Callback<Boolean>() {
+                    @Override
+                    public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                        Log.d(TAG, "onResponse: "+response.code()+"  body:"+response.body()+"  isSuccess"+response.isSuccessful());
+                        if (response.code()==200){
+                            if (response.isSuccessful()){
+                                ToastUtils.showShort("头像上传成功!");
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Boolean> call, Throwable t) {
+
+                    }
+                });
                 Glide.with(getActivity())
                         .load(paths.get(0))
+                        .placeholder(R.mipmap.icon_touxiang)
                         .apply(new RequestOptions().transform(new GlideRoundTransform(getActivity(), 60)))
                         .into(iv_myImage);
             }

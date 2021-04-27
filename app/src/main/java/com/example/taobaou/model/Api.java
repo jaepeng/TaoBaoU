@@ -109,7 +109,25 @@ public interface Api {
     @GET("/faceRegister/getAllRegisterName")
     Call<List<String>> getAllFace();
 
+
     @POST("/faceRegister/addRegisterInfo")
     Call<Boolean> addOneFace(@Body FaceRegisterInfo faceRegisterInfo);
 
+    /**
+     * 获取用户头像
+     * @param username
+     * @return
+     */
+    @GET("/firstdemo/getUserHeader")
+    Call<String> getUserHeaderurl(@Query("username") String username);
+
+    /**
+     *更改用户头像
+     * @param username
+     * @param coverPath
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("/firstdemo/changeCover")
+    Call<Boolean> setUserHeader(@Field("account")String username,@Field("coverpath")String coverPath);
 }

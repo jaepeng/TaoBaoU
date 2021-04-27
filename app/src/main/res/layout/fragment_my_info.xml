@@ -17,9 +17,9 @@
 
     <ImageView
         android:id="@+id/iv_myInfo_Image"
-        android:layout_width="@dimen/dp_140"
-        android:layout_height="@dimen/dp_140"
-        android:scaleType="fitXY"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop"
         android:src="@mipmap/icon_touxiang"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
