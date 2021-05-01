@@ -98,7 +98,7 @@ public interface Api {
 
 
     @GET("/firstdemo/changePsw")
-    Call<Boolean> changePwd(@Query("username") String username,@Query("newpsw")String newpsw);
+    Call<Boolean> changePwd(@Query("username") String username,@Query("oldPsw")String oldPsw,@Query("newpsw")String newpsw);
 
 
     /**

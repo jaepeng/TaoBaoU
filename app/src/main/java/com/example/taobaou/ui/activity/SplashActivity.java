@@ -54,7 +54,13 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mRxTimer!=null){
+            mRxTimer.closeTimer();
+            mRxTimer=null;
+
+        }
         mHandler.removeCallbacks(timeRunnable);
+
     }
 
     @OnClick(R.id.tv_skip)
@@ -77,7 +83,12 @@ public class SplashActivity extends BaseActivity {
     }
 
     public void goMainActivity(){
+        if (mRxTimer!=null){
+            mRxTimer.closeTimer();
+            mRxTimer=null;
+        }
         Intent intent=new Intent(this,MainActivity.class);
         startActivity(intent);
     }
+
 }
