@@ -33,6 +33,7 @@
     <color name="page_bg_color">#f8f8f8</color>
     <color name="pureblack">#ff000000</color>
     <color name="black">#333333</color>
+    <color name="color_222222">#222222</color>
     <color name="black_text">#333333</color>
     <color name="blue">#205ba9</color>
     <color name="gray">#adadad</color>
@@ -55,6 +56,7 @@
     <color name="viewfinder_mask">#000000</color>
     <color name="result_view">#b0000000</color>
     <color name="possible_result_points">#c0ffff00</color>
+    <color name="color_2b2b2b2">#2b2b2b</color>
     <!-- camera -->
     <color name="transparent_bg">#00000000</color>
     <!-- records -->

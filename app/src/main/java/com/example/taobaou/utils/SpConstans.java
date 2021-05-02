@@ -7,4 +7,6 @@ public class SpConstans {
     public static final String LAST_USER_ACCOUNT="sp_last_user_account";
     //判断是否是第一次登录
     public static final String FIRST_LOGIN="sp_first_login";
+    //记录查看大图的文件
+    public static final String IMAGE_URL_LIST="image_url_list";
 }

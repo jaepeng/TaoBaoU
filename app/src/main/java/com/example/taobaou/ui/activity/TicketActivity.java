@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.example.taobaou.R;
 import com.example.taobaou.base.BaseActivity;
@@ -40,6 +41,7 @@ import org.json.JSONObject;
 import org.json.JSONStringer;
 import org.json.JSONTokener;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -75,6 +77,7 @@ public class TicketActivity extends BaseActivity implements ITicketPagerCallback
     @BindView(R.id.ticket_load_retry)
     public TextView loadErrorText;
     public TicketParams mTicketParams;
+    private String mCovreUrl="";
 
     @Override
     protected void initPresenter() {
@@ -126,7 +129,6 @@ public class TicketActivity extends BaseActivity implements ITicketPagerCallback
                 //复制到粘贴表
                 ClipData clipdata = ClipData.newPlainText("sob_tao_bao_ticket_code", code);
                 cm.setPrimaryClip(clipdata);
-                //todo:复制后,保留复制的历史记录.
                 String account = SharedPreferenceManager.getInstance().getString(SpConstans.LAST_USER_ACCOUNT);
                 Api apiService = OtherRetrofitManager.getInstance().getApiService();
                 Call<Boolean> task = apiService.addTicketHistory(new TicketHistory(UrlUtils.getCoverPath(mUrl), account,code ));
@@ -147,19 +149,12 @@ public class TicketActivity extends BaseActivity implements ITicketPagerCallback
                     }
                 });
 
-//                mTicketParams=new TicketParams(mUrl,code);
-//                historymap.put(mUrl,code);
-//                setMap(TicketActivity.this,historymap);
-
-
-
                 //判断是否有淘宝
                 //如果有则打开淘宝,没有则提示复制成功
                 if (mHasTaobao){
                     Intent taobaoIntent=new Intent();
 //                    taobaoIntent.setAction("android.intent.action.Main");
 //                    taobaoIntent.addCategory("android.intent.category.LAUNCHER");
-                    //todo:无法跳转到对应的领券界面,查看是否这里除了问题
                     ComponentName componentName=new ComponentName("com.taobao.taobao","com.taobao.tao.TBMainActivity");
                     taobaoIntent.setComponent(componentName);
                     startActivity(taobaoIntent);
@@ -171,6 +166,26 @@ public class TicketActivity extends BaseActivity implements ITicketPagerCallback
 
             }
         });
+        mCover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!TextUtils.isEmpty(mCovreUrl)){
+                    goBigimageView(mCovreUrl);
+                }else{
+                    ToastUtils.showShort("图片没有链接!");
+                }
+            }
+        });
+    }
+
+    private void goBigimageView(String code) {
+        ArrayList<String> paths=new ArrayList<>();
+        paths.add(code);
+        Intent intent=new Intent(this,ShowImageActivity.class);
+        intent.putStringArrayListExtra(SpConstans.IMAGE_URL_LIST,paths);
+        startActivity(intent);
+
+
     }
 
     @Override
@@ -184,6 +199,7 @@ public class TicketActivity extends BaseActivity implements ITicketPagerCallback
         if (mCover!=null&& !TextUtils.isEmpty(cover)) {
             mUrl=cover;
             cover=UrlUtils.getCoverPath(cover);
+            mCovreUrl=cover;
             Glide.with(this).load(cover).into(mCover);
 
         }
