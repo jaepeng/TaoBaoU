@@ -40,7 +40,7 @@ import com.example.facelibs.faceserver.CompareResult;
 import com.example.facelibs.faceserver.FaceServer;
 import com.example.facelibs.model.DrawInfo;
 import com.example.facelibs.model.FacePreviewInfo;
-import com.example.facelibs.model.FaceRegisterInfo;
+import com.example.facelibs.model.FaceRegisterInfoBean;
 import com.example.facelibs.util.ConfigUtil;
 import com.example.facelibs.util.DrawHelper;
 import com.example.facelibs.util.camera.CameraHelper;
@@ -538,6 +538,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
         //获得传入的用户名
         mIntent = getIntent();
         String accountString = mIntent.getStringExtra(Constants.FACE_REGISTER_ACCOUNT);
+        Log.d(TAG, "registerFace: "+accountString);
 
         if (registerStatus == REGISTER_STATUS_READY && facePreviewInfoList != null && facePreviewInfoList.size() > 0) {
             registerStatus = REGISTER_STATUS_PROCESSING;
@@ -545,7 +546,6 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
                 @Override
                 public void subscribe(ObservableEmitter<Boolean> emitter) {
                     //todo:人脸注册在这里进行,name也在这里设置.将注册功能放在登录完.
-
                     //之后识别通过了就会显示这个名字
                     boolean success = FaceServer.getInstance().registerNv21(FaceRegisetrActivity.this, nv21.clone(), previewSize.width, previewSize.height,
                             facePreviewInfoList.get(0).getFaceInfo(), accountString + " "/*faceHelper.getTrackedFaceCount()*/);
@@ -567,7 +567,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
                             Log.d(TAG, "onNext: 人脸注册成功");
                             registerStatus = REGISTER_STATUS_DONE;
                             ToastUtsils.showToast("正在注册,请稍后");
-                            Call<Boolean> task = OtherRetrofitManager.getInstance().getApiService().addOneFace(new FaceRegisterInfo(nv21, accountString));
+                            Call<Boolean> task = OtherRetrofitManager.getInstance().getApiService().addOneFace(new FaceRegisterInfoBean(accountString));
                             task.enqueue(new Callback<Boolean>() {
                                 @Override
                                 public void onResponse(Call<Boolean> call, Response<Boolean> response) {
@@ -580,7 +580,6 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
                                         }
                                     }
                                 }
-
                                 @Override
                                 public void onFailure(Call<Boolean> call, Throwable t) {
                                     ToastUtsils.showToast("人脸注册失败,请重试");

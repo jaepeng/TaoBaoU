@@ -32,7 +32,7 @@
     <TextView
         android:id="@+id/tv_skip"
         android:textColor="@color/gray"
-        android:layout_width="100dp"
+        android:layout_width="150dp"
         android:gravity="center"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"

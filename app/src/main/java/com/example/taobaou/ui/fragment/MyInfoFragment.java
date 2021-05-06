@@ -100,6 +100,7 @@ public class MyInfoFragment extends BaseFragment {
                     if (response.isSuccessful()) {
                         Glide.with(getActivity())
                                 .load(response.body())
+                                .placeholder(R.mipmap.icon_touxiang)
                                 .apply(new RequestOptions().transform(new GlideRoundTransform(getActivity(), 60)))
                                 .into(iv_myImage);
                     }
@@ -232,8 +233,7 @@ public class MyInfoFragment extends BaseFragment {
                             if (response.body().contains(SharedPreferenceManager.getInstance().getString(SpConstans.LAST_USER_ACCOUNT))){
                                 ToastUtils.showShort("该账号已经绑定过了！");
                             }else{
-
-                                FaceRegisetrActivity.startActivity(getContext(),mAccount);
+                                FaceRegisetrActivity.startActivity(getContext(),tv_username.getText().toString());
                             }
                         }else{
 

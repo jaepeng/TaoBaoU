@@ -138,6 +138,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                             @Override
                             public void onFailure(Call<Boolean> call, Throwable t) {
+                                Log.e(TAG, "onFailure: "+t.getMessage(),t);
                                 ToastUtsils.showToast("注册失败");
                             }
                         });

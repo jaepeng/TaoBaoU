@@ -26,6 +26,8 @@ public class SplashActivity extends BaseActivity {
             mHandler.postDelayed(this,1000);
             if (timeWait>=0) {
                 tvSkip.setText("跳过(" + timeWait-- + ")");
+            }else{
+                mHandler.removeCallbacks(this);
             }
         }
     };

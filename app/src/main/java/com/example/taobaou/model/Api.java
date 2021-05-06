@@ -1,6 +1,6 @@
 package com.example.taobaou.model;
 
-import com.example.facelibs.model.FaceRegisterInfo;
+import com.example.facelibs.model.FaceRegisterInfoBean;
 import com.example.taobaou.model.domain.Categories;
 import com.example.taobaou.model.domain.HomePagerContent;
 import com.example.taobaou.model.domain.OnSellContetn;
@@ -111,7 +111,7 @@ public interface Api {
 
 
     @POST("/faceRegister/addRegisterInfo")
-    Call<Boolean> addOneFace(@Body FaceRegisterInfo faceRegisterInfo);
+    Call<Boolean> addOneFace(@Body FaceRegisterInfoBean faceRegisterInfo);
 
     /**
      * 获取用户头像
