@@ -74,7 +74,7 @@ public class TicketHistoryActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<TicketHistory>> call, Throwable t) {
-
+                Log.e(TAG, "onFailure: "+t.getMessage(),t );
             }
         });
     }
@@ -127,9 +127,6 @@ public class TicketHistoryActivity extends AppCompatActivity {
                 });
                 if (mHasTaobao) {
                     Intent taobaoIntent = new Intent();
-//                    taobaoIntent.setAction("android.intent.action.Main");
-//                    taobaoIntent.addCategory("android.intent.category.LAUNCHER");
-                    //todo:无法跳转到对应的领券界面,查看是否这里除了问题
                     ComponentName componentName = new ComponentName("com.taobao.taobao", "com.taobao.tao.TBMainActivity");
                     taobaoIntent.setComponent(componentName);
                     startActivity(taobaoIntent);

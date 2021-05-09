@@ -86,10 +86,17 @@ public class MyInfoFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         mAccount = SharedPreferenceManager.getInstance().getString(SpConstans.LAST_USER_ACCOUNT);
         mApiService = OtherRetrofitManager.getInstance().getApiService();
-        EventBus.getDefault().register(this);
         mLastUserAccount = SharedPreferenceManager.getInstance().getString(SpConstans.LAST_USER_ACCOUNT);
+        Log.d(TAG, "onCreate: mAccount"+mAccount);
+        getHeardImage();
+
+    }
+
+    private void getHeardImage() {
+        mAccount = SharedPreferenceManager.getInstance().getString(SpConstans.LAST_USER_ACCOUNT);
         Call<String> userHeaderurl = mApiService.getUserHeaderurl(mAccount);
         userHeaderurl.enqueue(new Callback<String>() {
             @Override
@@ -112,7 +119,6 @@ public class MyInfoFragment extends BaseFragment {
                 Log.e(TAG, "onFailure: "+t.getMessage(),t);
             }
         });
-
     }
 
     @Override
@@ -300,6 +306,7 @@ public class MyInfoFragment extends BaseFragment {
             isloginShow(true);
             tv_username.setText(messageEvent.getMkeyword());
             SharedPreferenceManager.getInstance().putValue(SpConstans.LAST_USER_ACCOUNT,messageEvent.getMkeyword());
+            getHeardImage();
         }
 
         if (messageEvent.getMessageCode()==MessageCode.REGISTERUSERACCOUNT){
@@ -314,6 +321,8 @@ public class MyInfoFragment extends BaseFragment {
             isloginShow(true);
             SharedPreferenceManager.getInstance().putValue(SpConstans.LAST_USER_ACCOUNT,messageEvent.getMkeyword());
             tv_username.setText(messageEvent.getMkeyword());
+            getHeardImage();
+
         }
         if (messageEvent.getMessageCode()==MessageCode.FACE_REGISTER_SUCCESS){
             //人脸注册成功

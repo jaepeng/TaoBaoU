@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.example.taobaou.R;
 import com.example.taobaou.base.BaseActivity;
+import com.example.taobaou.manager.GetuiManager;
 import com.example.taobaou.utils.RxTimer;
 
 import java.util.concurrent.TimeUnit;
@@ -36,6 +37,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GetuiManager.getInstance().init(this);
         tvSkip.setText("跳过( "+(timeWait)+" )");
         mRxTimer = new RxTimer.Builder().setTime(timeWait).setTimeUnit(TimeUnit.SECONDS).build();
         mRxTimer.startTimer();
@@ -90,6 +92,7 @@ public class SplashActivity extends BaseActivity {
         }
         Intent intent=new Intent(this,MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
 }

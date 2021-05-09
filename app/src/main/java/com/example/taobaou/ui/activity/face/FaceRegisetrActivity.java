@@ -57,6 +57,8 @@ import com.example.taobaou.R;
 import com.example.taobaou.model.message.MessageCode;
 import com.example.taobaou.model.message.MessageEvent;
 import com.example.taobaou.utils.OtherRetrofitManager;
+import com.example.taobaou.utils.SharedPreferenceManager;
+import com.example.taobaou.utils.SpConstans;
 import com.example.taobaou.utils.ToastUtsils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -222,7 +224,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
         //todo:清除本地人脸数据
 
 //        FaceServer.getInstance().clearAllFaces(this);
-        //本地人脸库初始化
+        //本地人脸库初始化 
         FaceServer.getInstance().init(this);
 
 
@@ -743,6 +745,7 @@ public class FaceRegisetrActivity extends AppCompatActivity implements ViewTreeO
 //                            MainActivity.startActivity(FaceRegisetrActivity.this,intent);
                             //todo:识别通过,去通知MyInfoFragment登录
                             Log.d(TAG, "onNext: 识别通过！！");
+                            SharedPreferenceManager.getInstance().putValue(SpConstans.LAST_USER_ACCOUNT,compareResult.getUserName());
                             finish();
                             
 
